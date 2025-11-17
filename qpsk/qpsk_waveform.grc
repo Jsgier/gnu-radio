@@ -28,7 +28,7 @@ options:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [8, 8]
+    coordinate: [24, 16.0]
     rotation: 0
     state: enabled
 
@@ -42,7 +42,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [216, 64.0]
+    coordinate: [432, 88.0]
     rotation: 0
     state: enabled
 - name: freq_offset
@@ -54,16 +54,16 @@ blocks:
     min_len: '200'
     orient: QtCore.Qt.Horizontal
     rangeType: float
-    start: -200m
-    step: 1m
-    stop: 100m
-    value: 25m
+    start: -100e-3
+    step: 10e-3
+    stop: 100e-3
+    value: 25e-3
     widget: counter_slider
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [480, 12.0]
+    coordinate: [704, 16.0]
     rotation: 0
     state: enabled
 - name: noise_volt
@@ -76,15 +76,15 @@ blocks:
     orient: QtCore.Qt.Horizontal
     rangeType: float
     start: '0'
-    step: '1'
-    stop: '100'
-    value: 200m
+    step: 10e-3
+    stop: 100e-3
+    value: '0'
     widget: counter_slider
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [360, 12.0]
+    coordinate: [528, 16.0]
     rotation: 0
     state: enabled
 - name: oqpsk
@@ -104,7 +104,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [8, 312.0]
+    coordinate: [24, 144.0]
     rotation: 0
     state: enabled
 - name: rrc_taps
@@ -116,7 +116,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [248, 8.0]
+    coordinate: [376, 16.0]
     rotation: 0
     state: enabled
 - name: samp_rate
@@ -128,7 +128,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [168, 8.0]
+    coordinate: [280, 16.0]
     rotation: 0
     state: enabled
 - name: sps
@@ -140,7 +140,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [168, 64.0]
+    coordinate: [368, 88.0]
     rotation: 0
     state: enabled
 - name: time_offset
@@ -152,8 +152,8 @@ blocks:
     min_len: '200'
     orient: QtCore.Qt.Horizontal
     rangeType: float
-    start: 999m
-    step: 100u
+    start: 999e-3
+    step: 100e-6
     stop: '1.001'
     value: '1.0005'
     widget: counter_slider
@@ -161,7 +161,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [592, 12.0]
+    coordinate: [864, 16.0]
     rotation: 0
     state: enabled
 - name: analog_random_source_x_0
@@ -175,13 +175,13 @@ blocks:
     min: '0'
     minoutbuf: '0'
     num_samps: '1000'
-    repeat: 'False'
+    repeat: 'True'
     type: byte
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [8, 224.0]
+    coordinate: [24, 352.0]
     rotation: 0
     state: enabled
 - name: blocks_throttle2_0
@@ -202,7 +202,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [344, 232.0]
+    coordinate: [576, 368.0]
     rotation: 0
     state: enabled
 - name: channels_channel_model_0
@@ -223,7 +223,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [480, 212.0]
+    coordinate: [808, 336.0]
     rotation: 0
     state: enabled
 - name: digital_constellation_modulator_0
@@ -245,7 +245,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [168, 224.0]
+    coordinate: [288, 352.0]
     rotation: 0
     state: enabled
 - name: fir_filter_xxx_0
@@ -264,9 +264,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [616, 328.0]
+    coordinate: [1088, 504.0]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: qtgui_const_sink_x_0
   id: qtgui_const_sink_x
   parameters:
@@ -319,7 +319,7 @@ blocks:
     marker8: '0'
     marker9: '0'
     name: '""'
-    nconnections: '2'
+    nconnections: '1'
     size: '1024'
     style1: '0'
     style10: '0'
@@ -356,7 +356,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [848, 340.0]
+    coordinate: [1400, 472.0]
     rotation: 0
     state: enabled
 - name: qtgui_freq_sink_x_2
@@ -374,7 +374,7 @@ blocks:
     alpha7: '1.0'
     alpha8: '1.0'
     alpha9: '1.0'
-    autoscale: 'False'
+    autoscale: 'True'
     average: '0.05'
     axislabels: 'True'
     bw: samp_rate
@@ -410,7 +410,7 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
     name: '""'
-    nconnections: '2'
+    nconnections: '1'
     norm_window: 'False'
     showports: 'False'
     tr_chan: '0'
@@ -437,7 +437,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [848, 140.0]
+    coordinate: [1400, 272.0]
     rotation: 0
     state: enabled
 - name: qtgui_time_sink_x_0
@@ -494,7 +494,7 @@ blocks:
     marker8: '-1'
     marker9: '-1'
     name: '""'
-    nconnections: '2'
+    nconnections: '1'
     size: '1024'
     srate: samp_rate
     stemplot: 'False'
@@ -534,7 +534,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [848, 236.0]
+    coordinate: [1400, 368.0]
     rotation: 0
     state: enabled
 
@@ -546,9 +546,6 @@ connections:
 - [channels_channel_model_0, '0', qtgui_freq_sink_x_2, '0']
 - [channels_channel_model_0, '0', qtgui_time_sink_x_0, '0']
 - [digital_constellation_modulator_0, '0', blocks_throttle2_0, '0']
-- [fir_filter_xxx_0, '0', qtgui_const_sink_x_0, '1']
-- [fir_filter_xxx_0, '0', qtgui_freq_sink_x_2, '1']
-- [fir_filter_xxx_0, '0', qtgui_time_sink_x_0, '1']
 
 metadata:
   file_format: 1

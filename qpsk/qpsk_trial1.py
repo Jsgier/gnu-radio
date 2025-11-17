@@ -17,8 +17,6 @@ import numpy
 from gnuradio import channels
 from gnuradio.filter import firdes
 from gnuradio import digital
-from gnuradio import eng_notation
-from gnuradio import filter
 from gnuradio import gr
 from gnuradio.fft import window
 import sys
@@ -26,6 +24,7 @@ import signal
 from PyQt5 import Qt
 from argparse import ArgumentParser
 from gnuradio.eng_arg import eng_float, intx
+from gnuradio import eng_notation
 import sip
 import threading
 
@@ -68,45 +67,33 @@ class qpsk_trial1(gr.top_block, Qt.QWidget):
         # Variables
         ##################################################
         self.sps = sps = 4
-        self.samp_rate = samp_rate = 10
-        self.freq_offset = freq_offset = 25e-3
+        self.samp_rate = samp_rate = 250e3
         self.excess_bw = excess_bw = 0.5
-        self.variable_qtgui_label_0 = variable_qtgui_label_0 = freq_offset
         self.time_offset = time_offset = 1.0005
         self.rrc_taps = rrc_taps = firdes.root_raised_cosine(1.0,samp_rate,samp_rate/sps,excess_bw,11*sps)
         self.oqpsk = oqpsk = digital.constellation_rect([-1-1j, -1+1j, 1+1j, 1-1j], [0, 1, 3, 2],
         4, 2, 2, 1, 1).base()
-        self.noise_volt = noise_volt = 200e-3
+        self.noise_volt = noise_volt = 0
+        self.freq_offset = freq_offset = 25e-3
 
         ##################################################
         # Blocks
         ##################################################
 
-        self._time_offset_range = qtgui.Range(800e-3, 1100e-3, 100e-6, 1.0005, 200)
+        self._time_offset_range = qtgui.Range(999e-3, 1.001, 100e-6, 1.0005, 200)
         self._time_offset_win = qtgui.RangeWidget(self._time_offset_range, self.set_time_offset, "Channel: time offset", "counter_slider", float, QtCore.Qt.Horizontal)
         self.top_layout.addWidget(self._time_offset_win)
-        self._noise_volt_range = qtgui.Range(100e-3, 1000e-2, 10e-3, 200e-3, 200)
+        self._noise_volt_range = qtgui.Range(0, 100e-3, 10e-3, 0, 200)
         self._noise_volt_win = qtgui.RangeWidget(self._noise_volt_range, self.set_noise_volt, "Channel: Noise Voltage", "counter_slider", float, QtCore.Qt.Horizontal)
         self.top_layout.addWidget(self._noise_volt_win)
-        self._freq_offset_range = qtgui.Range(-500e-3, 500e-3, 100e-3, 25e-3, 200)
+        self._freq_offset_range = qtgui.Range(-100e-3, 100e-3, 10e-3, 25e-3, 200)
         self._freq_offset_win = qtgui.RangeWidget(self._freq_offset_range, self.set_freq_offset, "Channel: Freq Offset", "counter_slider", float, QtCore.Qt.Horizontal)
         self.top_layout.addWidget(self._freq_offset_win)
-        self._variable_qtgui_label_0_tool_bar = Qt.QToolBar(self)
-
-        if None:
-            self._variable_qtgui_label_0_formatter = None
-        else:
-            self._variable_qtgui_label_0_formatter = lambda x: repr(x)
-
-        self._variable_qtgui_label_0_tool_bar.addWidget(Qt.QLabel("freq_offset"))
-        self._variable_qtgui_label_0_label = Qt.QLabel(str(self._variable_qtgui_label_0_formatter(self.variable_qtgui_label_0)))
-        self._variable_qtgui_label_0_tool_bar.addWidget(self._variable_qtgui_label_0_label)
-        self.top_layout.addWidget(self._variable_qtgui_label_0_tool_bar)
         self.qtgui_time_sink_x_0 = qtgui.time_sink_c(
             1024, #size
             samp_rate, #samp_rate
             "", #name
-            2, #number of inputs
+            1, #number of inputs
             None # parent
         )
         self.qtgui_time_sink_x_0.set_update_time(0.10)
@@ -115,7 +102,7 @@ class qpsk_trial1(gr.top_block, Qt.QWidget):
         self.qtgui_time_sink_x_0.set_y_label('Amplitude', "")
 
         self.qtgui_time_sink_x_0.enable_tags(True)
-        self.qtgui_time_sink_x_0.set_trigger_mode(qtgui.TRIG_MODE_AUTO, qtgui.TRIG_SLOPE_POS, 0.0, 0, 0, "")
+        self.qtgui_time_sink_x_0.set_trigger_mode(qtgui.TRIG_MODE_FREE, qtgui.TRIG_SLOPE_POS, 0.0, 0, 0, "")
         self.qtgui_time_sink_x_0.enable_autoscale(False)
         self.qtgui_time_sink_x_0.enable_grid(False)
         self.qtgui_time_sink_x_0.enable_axis_labels(True)
@@ -137,7 +124,7 @@ class qpsk_trial1(gr.top_block, Qt.QWidget):
             -1, -1, -1, -1, -1]
 
 
-        for i in range(4):
+        for i in range(2):
             if len(labels[i]) == 0:
                 if (i % 2 == 0):
                     self.qtgui_time_sink_x_0.set_line_label(i, "Re{{Data {0}}}".format(i/2))
@@ -159,13 +146,13 @@ class qpsk_trial1(gr.top_block, Qt.QWidget):
             0, #fc
             samp_rate, #bw
             "", #name
-            2,
+            1,
             None # parent
         )
         self.qtgui_freq_sink_x_2.set_update_time(0.10)
         self.qtgui_freq_sink_x_2.set_y_axis((-10), 10)
         self.qtgui_freq_sink_x_2.set_y_label('Relative Gain', 'dB')
-        self.qtgui_freq_sink_x_2.set_trigger_mode(qtgui.TRIG_MODE_AUTO, 0.0, 0, "")
+        self.qtgui_freq_sink_x_2.set_trigger_mode(qtgui.TRIG_MODE_FREE, 0.0, 0, "")
         self.qtgui_freq_sink_x_2.enable_autoscale(True)
         self.qtgui_freq_sink_x_2.enable_grid(False)
         self.qtgui_freq_sink_x_2.set_fft_average(0.05)
@@ -184,7 +171,7 @@ class qpsk_trial1(gr.top_block, Qt.QWidget):
         alphas = [1.0, 1.0, 1.0, 1.0, 1.0,
             1.0, 1.0, 1.0, 1.0, 1.0]
 
-        for i in range(2):
+        for i in range(1):
             if len(labels[i]) == 0:
                 self.qtgui_freq_sink_x_2.set_line_label(i, "Data {0}".format(i))
             else:
@@ -198,13 +185,13 @@ class qpsk_trial1(gr.top_block, Qt.QWidget):
         self.qtgui_const_sink_x_0 = qtgui.const_sink_c(
             1024, #size
             "", #name
-            2, #number of inputs
+            1, #number of inputs
             None # parent
         )
         self.qtgui_const_sink_x_0.set_update_time(0.10)
         self.qtgui_const_sink_x_0.set_y_axis((-2), 2)
         self.qtgui_const_sink_x_0.set_x_axis((-2), 2)
-        self.qtgui_const_sink_x_0.set_trigger_mode(qtgui.TRIG_MODE_AUTO, qtgui.TRIG_SLOPE_POS, 0.0, 0, "")
+        self.qtgui_const_sink_x_0.set_trigger_mode(qtgui.TRIG_MODE_FREE, qtgui.TRIG_SLOPE_POS, 0.0, 0, "")
         self.qtgui_const_sink_x_0.enable_autoscale(False)
         self.qtgui_const_sink_x_0.enable_grid(False)
         self.qtgui_const_sink_x_0.enable_axis_labels(True)
@@ -223,7 +210,7 @@ class qpsk_trial1(gr.top_block, Qt.QWidget):
         alphas = [1.0, 1.0, 1.0, 1.0, 1.0,
             1.0, 1.0, 1.0, 1.0, 1.0]
 
-        for i in range(2):
+        for i in range(1):
             if len(labels[i]) == 0:
                 self.qtgui_const_sink_x_0.set_line_label(i, "Data {0}".format(i))
             else:
@@ -236,8 +223,6 @@ class qpsk_trial1(gr.top_block, Qt.QWidget):
 
         self._qtgui_const_sink_x_0_win = sip.wrapinstance(self.qtgui_const_sink_x_0.qwidget(), Qt.QWidget)
         self.top_layout.addWidget(self._qtgui_const_sink_x_0_win)
-        self.fir_filter_xxx_0 = filter.fir_filter_ccc(1, rrc_taps)
-        self.fir_filter_xxx_0.declare_sample_delay(0)
         self.digital_constellation_modulator_0 = digital.generic_mod(
             constellation=oqpsk,
             differential=True,
@@ -253,7 +238,7 @@ class qpsk_trial1(gr.top_block, Qt.QWidget):
             epsilon=time_offset,
             taps=[1.0],
             noise_seed=0,
-            block_tags=True)
+            block_tags=False)
         self.blocks_throttle2_0 = blocks.throttle( gr.sizeof_gr_complex*1, samp_rate, True, 0 if "auto" == "auto" else max( int(float(0.1) * samp_rate) if "auto" == "time" else int(0.1), 1) )
         self.analog_random_source_x_0 = blocks.vector_source_b(list(map(int, numpy.random.randint(0, 2, 1000))), True)
 
@@ -263,14 +248,10 @@ class qpsk_trial1(gr.top_block, Qt.QWidget):
         ##################################################
         self.connect((self.analog_random_source_x_0, 0), (self.digital_constellation_modulator_0, 0))
         self.connect((self.blocks_throttle2_0, 0), (self.channels_channel_model_0, 0))
-        self.connect((self.channels_channel_model_0, 0), (self.fir_filter_xxx_0, 0))
         self.connect((self.channels_channel_model_0, 0), (self.qtgui_const_sink_x_0, 0))
         self.connect((self.channels_channel_model_0, 0), (self.qtgui_freq_sink_x_2, 0))
         self.connect((self.channels_channel_model_0, 0), (self.qtgui_time_sink_x_0, 0))
         self.connect((self.digital_constellation_modulator_0, 0), (self.blocks_throttle2_0, 0))
-        self.connect((self.fir_filter_xxx_0, 0), (self.qtgui_const_sink_x_0, 1))
-        self.connect((self.fir_filter_xxx_0, 0), (self.qtgui_freq_sink_x_2, 1))
-        self.connect((self.fir_filter_xxx_0, 0), (self.qtgui_time_sink_x_0, 1))
 
 
     def closeEvent(self, event):
@@ -298,27 +279,12 @@ class qpsk_trial1(gr.top_block, Qt.QWidget):
         self.qtgui_freq_sink_x_2.set_frequency_range(0, self.samp_rate)
         self.qtgui_time_sink_x_0.set_samp_rate(self.samp_rate)
 
-    def get_freq_offset(self):
-        return self.freq_offset
-
-    def set_freq_offset(self, freq_offset):
-        self.freq_offset = freq_offset
-        self.set_variable_qtgui_label_0(self.freq_offset)
-        self.channels_channel_model_0.set_frequency_offset(self.freq_offset)
-
     def get_excess_bw(self):
         return self.excess_bw
 
     def set_excess_bw(self, excess_bw):
         self.excess_bw = excess_bw
         self.set_rrc_taps(firdes.root_raised_cosine(1.0,self.samp_rate,self.samp_rate/self.sps,self.excess_bw,11*self.sps))
-
-    def get_variable_qtgui_label_0(self):
-        return self.variable_qtgui_label_0
-
-    def set_variable_qtgui_label_0(self, variable_qtgui_label_0):
-        self.variable_qtgui_label_0 = variable_qtgui_label_0
-        Qt.QMetaObject.invokeMethod(self._variable_qtgui_label_0_label, "setText", Qt.Q_ARG("QString", str(self._variable_qtgui_label_0_formatter(self.variable_qtgui_label_0))))
 
     def get_time_offset(self):
         return self.time_offset
@@ -332,7 +298,6 @@ class qpsk_trial1(gr.top_block, Qt.QWidget):
 
     def set_rrc_taps(self, rrc_taps):
         self.rrc_taps = rrc_taps
-        self.fir_filter_xxx_0.set_taps(self.rrc_taps)
 
     def get_oqpsk(self):
         return self.oqpsk
@@ -346,6 +311,13 @@ class qpsk_trial1(gr.top_block, Qt.QWidget):
     def set_noise_volt(self, noise_volt):
         self.noise_volt = noise_volt
         self.channels_channel_model_0.set_noise_voltage(self.noise_volt)
+
+    def get_freq_offset(self):
+        return self.freq_offset
+
+    def set_freq_offset(self, freq_offset):
+        self.freq_offset = freq_offset
+        self.channels_channel_model_0.set_frequency_offset(self.freq_offset)
 
 
 

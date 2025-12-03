@@ -246,13 +246,11 @@ class qpsk_trial1(gr.top_block, Qt.QWidget):
         self.blocks_throttle2_0 = blocks.throttle( gr.sizeof_gr_complex*1, samp_rate, True, 0 if "auto" == "auto" else max( int(float(0.1) * samp_rate) if "auto" == "time" else int(0.1), 1) )
         self.blocks_multiply_const_vxx_0 = blocks.multiply_const_ff((10e-3))
         self.blocks_integrate_xx_0 = blocks.integrate_ff(100, 1)
-        self.blocks_file_sink_0_0_0 = blocks.file_sink(gr.sizeof_char*1, 'C:\\Users\\JoshGier\\Desktop\\Comms_Testing\\gnu_radio_git\\qpsk\\files\\sequence_test_out.bin', False)
-        self.blocks_file_sink_0_0_0.set_unbuffered(False)
         self.blocks_delay_0 = blocks.delay(gr.sizeof_char*1, delay)
         self.blocks_char_to_float_1 = blocks.char_to_float(1, 1)
         self.blocks_char_to_float_0_0 = blocks.char_to_float(1, 1)
         self.blocks_char_to_float_0 = blocks.char_to_float(1, 1)
-        self.analog_random_source_x_0 = blocks.vector_source_b(list(map(int, numpy.random.randint(0, 4, 10000000))), True)
+        self.analog_random_source_x_0 = blocks.vector_source_b(list(map(int, numpy.random.randint(0, 5, 10000000))), True)
 
 
         ##################################################
@@ -269,7 +267,6 @@ class qpsk_trial1(gr.top_block, Qt.QWidget):
         self.connect((self.blocks_multiply_const_vxx_0, 0), (self.qtgui_number_sink_0, 0))
         self.connect((self.blocks_throttle2_0, 0), (self.channels_channel_model_0, 0))
         self.connect((self.blocks_unpack_k_bits_bb_1, 0), (self.blocks_char_to_float_0, 0))
-        self.connect((self.blocks_unpack_k_bits_bb_1, 0), (self.blocks_file_sink_0_0_0, 0))
         self.connect((self.blocks_unpack_k_bits_bb_1, 0), (self.blocks_xor_xx_0, 0))
         self.connect((self.blocks_unpack_k_bits_bb_1_0, 0), (self.blocks_delay_0, 0))
         self.connect((self.blocks_xor_xx_0, 0), (self.blocks_char_to_float_1, 0))

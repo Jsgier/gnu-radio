@@ -252,7 +252,7 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
-    max: '4'
+    max: '5'
     maxoutbuf: '0'
     min: '0'
     minoutbuf: '0'
@@ -390,7 +390,7 @@ blocks:
     bus_structure: null
     coordinate: [560, 776.0]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: blocks_head_0
   id: blocks_head
   parameters:

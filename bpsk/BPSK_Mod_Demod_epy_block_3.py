@@ -1,97 +1,62 @@
 import pmt
 from gnuradio import gr
-import sys
 
-class TestPatternChecker_PDU(gr.basic_block):
+class blk(gr.basic_block):
     """
-    Checks received PDUs against the known test pattern:
+    PDU block that takes a u8vector of bits (0/1 per element)
+    and packs them into bytes (MSB-first).
 
-    Input PDU payload format:
-        [seq_hi][seq_lo][pattern bytes...]
-
-    - seq = 16-bit sequence number
-    - pattern[i] = (i + seq) & 0xFF for i >= 2
-
-    It:
-      * Recomputes expected payload for that seq
-      * Compares byte-by-byte
-      * Tracks total frames, bad frames, and total byte errors
-      * Prints stats to stdout if verbose=True
+    Input:  PDU (meta, u8vector) length = 2072 bits
+    Output: PDU (meta, u8vector) length = 259 bytes (2072 / 8)
     """
 
-    def __init__(self, expected_len=200, verbose=True):
-        gr.basic_block.__init__(self,
-            name="TestPatternChecker_PDU",
+    def __init__(self, verbose=False):
+        gr.basic_block.__init__(
+            self,
+            name="bits_to_bytes_pdu",
             in_sig=None,
-            out_sig=None)
+            out_sig=None,
+        )
 
-        self.expected_len = int(expected_len)
-        self.verbose = bool(verbose)
+        self.verbose = verbose
 
-        self.total_frames = 0
-        self.bad_frames = 0
-        self.total_byte_errors = 0
+        self.message_port_register_in(pmt.intern("in"))
+        self.set_msg_handler(pmt.intern("in"), self.handle_msg)
 
-        # one input PDU port called "in"
-        self.message_port_register_in(pmt.intern('in'))
-        self.set_msg_handler(pmt.intern('in'), self.handle_pdu)
+        self.message_port_register_out(pmt.intern("out"))
 
-    def _expected_payload(self, seq):
-        """
-        Reconstruct the expected payload for a given sequence number.
-        Must match whatever TestPatternSource_PDU generates.
-        """
-        payload = bytearray(self.expected_len)
-        payload[0] = (seq >> 8) & 0xFF
-        payload[1] = seq & 0xFF
-        for i in range(2, self.expected_len):
-            payload[i] = (i + seq) & 0xFF
-        return payload
+    def handle_msg(self, msg):
+        meta = pmt.car(msg)
+        data = pmt.cdr(msg)
 
-    def handle_pdu(self, pdu):
-        meta = pmt.car(pdu)
-        data = bytearray(pmt.u8vector_elements(pmt.cdr(pdu)))
-
-        if len(data) < 2:
-            # too short to contain seq
+        if not pmt.is_u8vector(data):
+            if self.verbose:
+                print("[bits_to_bytes_pdu] Non-u8vector PDU, dropping.")
             return
 
-        # If RS or padding changed the length, you can either:
-        #  - enforce exact length
-        #  - or compare up to min(len(data), expected_len)
-        if len(data) != self.expected_len:
+        bits = list(pmt.u8vector_elements(data))
+        n_bits = len(bits)
+
+        if n_bits % 8 != 0:
             if self.verbose:
-                sys.stdout.write(
-                    "Checker: length mismatch (rx=%d, expected=%d)\n"
-                    % (len(data), self.expected_len)
-                )
-                sys.stdout.flush()
-            # use the common subset for comparison
-            compare_len = min(len(data), self.expected_len)
-            data = data[:compare_len]
-        else:
-            compare_len = len(data)
+                print(f"[bits_to_bytes_pdu] Bit length {n_bits} not multiple of 8, dropping.")
+            return
 
-        seq = (data[0] << 8) | data[1]
-        expected = self._expected_payload(seq)[:compare_len]
+        n_bytes = n_bits // 8
+        out_bytes = []
 
-        self.total_frames += 1
+        # Pack 8 bits (b0..b7) into one byte: b0 = MSB
+        idx = 0
+        for _ in range(n_bytes):
+            byte_val = 0
+            for b in range(8):
+                bit = bits[idx]
+                # Ensure bit is 0/1
+                bit = 1 if bit != 0 else 0
+                byte_val = (byte_val << 1) | bit
+                idx += 1
+            out_bytes.append(byte_val)
 
-        byte_errors = 0
-        for i in range(compare_len):
-            if data[i] != expected[i]:
-                byte_errors += 1
-
-        if byte_errors > 0:
-            self.bad_frames += 1
-            self.total_byte_errors += byte_errors
-
-        if self.verbose:
-            sys.stdout.write(
-                "Frame %d (seq=%d): len=%d, byte_errors=%d, "
-                "bad_frames=%d/%d, total_byte_errors=%d\n"
-                % (self.total_frames, seq, compare_len,
-                   byte_errors, self.bad_frames,
-                   self.total_frames, self.total_byte_errors)
-            )
-            sys.stdout.flush()
+        out_vec = pmt.init_u8vector(len(out_bytes), out_bytes)
+        out_pdu = pmt.cons(meta, out_vec)
+        self.message_port_pub(pmt.intern("out"), out_pdu)

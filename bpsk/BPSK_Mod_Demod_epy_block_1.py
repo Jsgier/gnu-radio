@@ -1,80 +1,61 @@
+import numpy
 import pmt
 from gnuradio import gr
 
-# You need `pip install reedsolo` in your GNU Radio Python environment
-import reedsolo
-
-class RS223_255_Interleaver_Enc_PDU(gr.basic_block):
+class blk(gr.sync_block):
     """
-    Input PDU:  CCSDS frame bytes (arbitrary length)
-    Output PDU: interleaved RS(223,255) codewords in bytes
+    Stream block that watches for 'CCSDS_frame' tags and, at the same
+    offset, injects a 'frame_len' tag with value 259.
 
-    - Breaks input into 223-byte blocks (pads last if needed)
-    - Encodes each with RS(223,255)
-    - Interleaves codewords with given depth
+    Assumes:
+      - Input and output are uint8 (bytes).
+      - Stream is 1:1 passthrough.
     """
-    def __init__(self, depth=5):
-        gr.basic_block.__init__(self,
-            name="RS223_255_Interleaver_Enc_PDU",
-            in_sig=None,
-            out_sig=None)
 
-        self.depth = int(depth)
-        self.rs = reedsolo.RSCodec(32)  # 255 - 223 = 32 parity bytes
+    def __init__(self, frame_len=2072):
+        gr.sync_block.__init__(
+            self,
+            name="frame_len_from_ccsds_tag",
+            in_sig=[numpy.uint8],
+            out_sig=[numpy.uint8],
+        )
 
-        self.message_port_register_in(pmt.intern('in'))
-        self.set_msg_handler(pmt.intern('in'), self.handle_pdu)
-        self.message_port_register_out(pmt.intern('out'))
+        # Keys we'll use
+        self.key_ccsds_frame = pmt.intern("CCSDS_frame")
+        self.key_frame_len   = pmt.intern("frame_len")
+        self.frame_len = pmt.from_long(frame_len)
 
-    def _encode_blocks(self, data):
-        blocks = []
-        for i in range(0, len(data), 223):
-            block = bytearray(data[i:i+223])
-            if len(block) < 223:
-                # pad with zeros at the end
-                block.extend([0] * (223 - len(block)))
-            enc = self.rs.encode(bytes(block))  # 255 bytes
-            blocks.append(bytearray(enc))
-        return blocks
+    def work(self, input_items, output_items):
+        inp = input_items[0]
+        out = output_items[0]
 
-    def _interleave(self, codewords):
-        """
-        Simple block interleaver: take groups of `depth` codewords,
-        write them row-wise into matrix, read out column-wise.
-        """
-        if self.depth <= 1:
-            # no interleaving
-            out = bytearray()
-            for cw in codewords:
-                out.extend(cw)
-            return out
+        # Passthrough
+        out[:] = inp
 
-        out = bytearray()
-        n = len(codewords)
-        cw_len = len(codewords[0])
+        nread    = self.nitems_read(0)
+        nwritten = self.nitems_written(0)
+        nitems   = len(inp)
 
-        for start in range(0, n, self.depth):
-            group = codewords[start:start + self.depth]
-            # pad group if incomplete
-            if len(group) < self.depth:
-                pad_cw = bytearray([0]*cw_len)
-                while len(group) < self.depth:
-                    group.append(pad_cw)
+        # Get all tags in this window of input
+        tags = self.get_tags_in_window(0, 0, nitems)
 
-            # interleave: columns first
-            for col in range(cw_len):
-                for row in range(self.depth):
-                    out.append(group[row][col])
+        for t in tags:
+            # Only react to CCSDS_frame tags
+            if t.key == self.key_ccsds_frame:
+                # Convert absolute tag offset to relative index within this work() call
+                rel_index = t.offset - nread
 
-        return out
+                if 0 <= rel_index < nitems:
+                    # Compute absolute output offset for this work() chunk
+                    out_offset = nwritten + rel_index
 
-    def handle_pdu(self, pdu):
-        meta = pmt.car(pdu)
-        data = bytearray(pmt.u8vector_elements(pmt.cdr(pdu)))
+                    # Inject frame_len tag at the same logical position
+                    self.add_item_tag(
+                        0,                          # output port
+                        out_offset,                 # absolute offset on output
+                        self.key_frame_len,         # key: "frame_len"
+                        self.frame_len,       # value: 259
+                        t.srcid                     # preserve original srcid
+                    )
 
-        codewords = self._encode_blocks(data)
-        interleaved = self._interleave(codewords)
-
-        out_vec = pmt.init_u8vector(len(interleaved), interleaved)
-        out_pdu = pmt.cons(meta, out_vec)
-        self.message_port_pub(pmt.intern('out'), out_pdu)
+        return nitems

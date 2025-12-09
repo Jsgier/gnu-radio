@@ -1,64 +1,55 @@
 import pmt
 from gnuradio import gr
-import time
-import threading
 
-class TestPatternSource_PDU(gr.basic_block):
+class blk(gr.basic_block):
     """
-    Periodically emits PDUs with a simple test pattern:
-    [seq_hi][seq_lo][payload bytes...]
-
-    - seq: 16-bit counter
-    - payload filled with pattern (e.g. incrementing or 0xAA/0x55)
+    PDU block that prepends the CCSDS ASM (0x1A CF FC 1D) to each PDU payload.
+    Input:  PDU (meta, u8vector)
+    Output: PDU (same meta, ASM + payload)
     """
 
-    def __init__(self, payload_len=200, interval_ms=100):
-        gr.basic_block.__init__(self,
-            name="TestPatternSource_PDU",
+    def __init__(self):
+        gr.basic_block.__init__(
+            self,
+            name="prepend_ccsds_asm_pdu",
             in_sig=None,
-            out_sig=None)
+            out_sig=None,
+        )
 
-        self.payload_len = int(payload_len)
-        self.interval = float(interval_ms) / 1000.0
-        self.seq = 0
+        # CCSDS ASM: 0x1A CF FC 1D
+        self._asm = bytes([0x1A, 0xCF, 0xFC, 0x1D])
 
-        self.message_port_register_out(pmt.intern('out'))
+        # Register PDU ports
+        self.message_port_register_in(pmt.intern("in"))
+        self.set_msg_handler(pmt.intern("in"), self.handle_msg)
 
-        # start worker thread
-        self._stop = False
-        self.thread = threading.Thread(target=self._worker)
-        self.thread.daemon = True
-        self.thread.start()
+        self.message_port_register_out(pmt.intern("out"))
 
-    def stop(self):
-        self._stop = True
-        try:
-            self.thread.join(timeout=0.1)
-        except:
-            pass
-        return super().stop()
+    def handle_msg(self, msg):
+        """
+        msg is a PDU: (meta, data)
+        meta: PMT dictionary (or PMT_NIL)
+        data: PMT u8vector
+        """
+        # Split into metadata and data
+        meta = pmt.car(msg)
+        data = pmt.cdr(msg)
 
-    def _make_payload(self):
-        # 2-byte sequence number + payload_len-2 bytes of pattern
-        payload = bytearray(self.payload_len)
-        seq = self.seq & 0xFFFF
-        payload[0] = (seq >> 8) & 0xFF
-        payload[1] = seq & 0xFF
+        if not pmt.is_u8vector(data):
+            # Not what we expect; ignore
+            return
 
-        # simple pattern: incrementing bytes
-        for i in range(2, self.payload_len):
-            payload[i] = (i + seq) & 0xFF
+        # Convert u8vector to Python bytes
+        in_bytes = bytes(bytearray(pmt.u8vector_elements(data)))
 
-        self.seq = (self.seq + 1) & 0xFFFF
-        return payload
+        # Prepend ASM
+        out_bytes = self._asm + in_bytes
 
-    def _worker(self):
-        while not self._stop:
-            payload = self._make_payload()
-            meta = pmt.make_dict()  # empty metadata
+        # Convert back to u8vector
+        out_vec = pmt.init_u8vector(len(out_bytes), list(out_bytes))
 
-            vec = pmt.init_u8vector(len(payload), payload)
-            pdu = pmt.cons(meta, vec)
+        # Preserve metadata (you could also modify meta here if needed)
+        out_pdu = pmt.cons(meta, out_vec)
 
-            self.message_port_pub(pmt.intern('out'), pdu)
-            time.sleep(self.interval)
+        # Publish on output port
+        self.message_port_pub(pmt.intern("out"), out_pdu)

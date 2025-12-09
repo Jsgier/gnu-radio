@@ -478,7 +478,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [848, 584.0]
+    coordinate: [864, 560.0]
     rotation: 0
     state: enabled
 - name: digital_constellation_modulator_0
@@ -488,7 +488,7 @@ blocks:
     alias: ''
     comment: ''
     constellation: bpsk
-    differential: 'True'
+    differential: 'False'
     excess_bw: excess_bw
     log: 'False'
     maxoutbuf: '0'
@@ -518,24 +518,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [584, 544.0]
-    rotation: 0
-    state: enabled
-- name: digital_diff_decoder_bb_0
-  id: digital_diff_decoder_bb
-  parameters:
-    affinity: ''
-    alias: ''
-    coding: digital.DIFF_DIFFERENTIAL
-    comment: ''
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    modulus: '2'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [1096, 576.0]
+    coordinate: [600, 568.0]
     rotation: 0
     state: enabled
 - name: digital_pfb_clock_sync_xxx_0
@@ -690,7 +673,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [840, 672.0]
+    coordinate: [864, 624.0]
     rotation: 0
     state: enabled
 - name: qtgui_const_sink_x_0_0_0_0
@@ -905,7 +888,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1328, 584.0]
+    coordinate: [1144, 560.0]
     rotation: 0
     state: enabled
 - name: virtual_sink_1_0
@@ -944,7 +927,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [376, 784.0]
+    coordinate: [384, 784.0]
     rotation: 0
     state: enabled
 - name: virtual_source_1_0
@@ -957,7 +940,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [376, 848.0]
+    coordinate: [384, 848.0]
     rotation: 0
     state: enabled
 
@@ -977,11 +960,10 @@ connections:
 - [blocks_xor_xx_0, '0', blocks_char_to_float_0_0_0, '0']
 - [channels_channel_model_0, '0', digital_pfb_clock_sync_xxx_0, '0']
 - [channels_channel_model_0, '0', digital_symbol_sync_xx_0, '0']
-- [digital_constellation_decoder_cb_0, '0', digital_diff_decoder_bb_0, '0']
+- [digital_constellation_decoder_cb_0, '0', virtual_sink_1, '0']
 - [digital_constellation_modulator_0, '0', blocks_throttle2_0, '0']
 - [digital_costas_loop_cc_0, '0', digital_constellation_decoder_cb_0, '0']
 - [digital_costas_loop_cc_0, '0', qtgui_const_sink_x_0_0_0, '0']
-- [digital_diff_decoder_bb_0, '0', virtual_sink_1, '0']
 - [digital_pfb_clock_sync_xxx_0, '0', virtual_sink_0, '0']
 - [digital_symbol_sync_xx_0, '0', virtual_sink_0, '0']
 - [virtual_source_0, '0', digital_costas_loop_cc_0, '0']

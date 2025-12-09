@@ -1,88 +1,82 @@
 import pmt
 from gnuradio import gr
-import reedsolo
 
-class RS223_255_Deinterleave_Dec_PDU(gr.basic_block):
+class blk(gr.basic_block):
     """
-    Input PDU: interleaved RS(223,255) codewords (bytes)
-    Output PDU: deinterleaved & RS-decoded bytes (original before RS+interleave)
+    PDU block that strips the CCSDS ASM (0x1A CF FC 1D) from each PDU payload.
 
-    Assumes same interleaver depth as encoder.
+    Input:  PDU (meta, u8vector) = [ASM(4) + RS(255)]  => 259 bytes
+    Output: PDU (same meta, u8vector) = [RS(255)]      => 255 bytes
+
+    If the ASM does not match or PDU is too short, the PDU is dropped.
     """
-    def __init__(self, depth=5):
-        gr.basic_block.__init__(self,
-            name="RS223_255_Deinterleave_Dec_PDU",
+
+    def __init__(self, verbose=False):
+        gr.basic_block.__init__(
+            self,
+            name="strip_ccsds_asm_pdu",
             in_sig=None,
-            out_sig=None)
+            out_sig=None,
+        )
 
-        self.depth = int(depth)
-        self.rs = reedsolo.RSCodec(32)
+        # CCSDS ASM: 0x1A CF FC 1D
+        self._asm = bytes([0x1A, 0xCF, 0xFC, 0x1D])
+        self.verbose = verbose
 
-        self.message_port_register_in(pmt.intern('in'))
-        self.set_msg_handler(pmt.intern('in'), self.handle_pdu)
-        self.message_port_register_out(pmt.intern('out'))
+        # Register PDU ports
+        self.message_port_register_in(pmt.intern("in"))
+        self.set_msg_handler(pmt.intern("in"), self.handle_msg)
 
-    def _deinterleave(self, data):
+        self.message_port_register_out(pmt.intern("out"))
+
+    def handle_msg(self, msg):
         """
-        Inverse of encoder's _interleave.
-        Returns a list of 255-byte codewords.
+        msg is a PDU: (meta, data)
+        meta: PMT dictionary (or PMT_NIL)
+        data: PMT u8vector
         """
-        if self.depth <= 1:
-            # no interleaving
-            if len(data) % 255 != 0:
-                # truncate partial
-                data = data[:len(data) - (len(data) % 255)]
-            codewords = []
-            for i in range(0, len(data), 255):
-                codewords.append(bytearray(data[i:i+255]))
-            return codewords
+        meta = pmt.car(msg)
+        data = pmt.cdr(msg)
 
-        cw_len = 255
-        group_size = self.depth * cw_len
-        codewords = []
+        if not pmt.is_u8vector(data):
+            if self.verbose:
+                print("[strip_ccsds_asm_pdu] Received non-u8vector PDU, dropping.")
+            return
 
-        idx = 0
-        while idx + group_size <= len(data):
-            group_bytes = data[idx:idx + group_size]
-            idx += group_size
+        # Convert u8vector to bytes
+        in_bytes = bytes(bytearray(pmt.u8vector_elements(data)))
+        length = len(in_bytes)
 
-            # reconstruct matrix: columns x rows
-            # we read out in columns: for each col, depth rows
-            # So we fill matrix[col][row]
-            matrix = [[0 for _ in range(self.depth)] for _ in range(cw_len)]
-            p = 0
-            for col in range(cw_len):
-                for row in range(self.depth):
-                    matrix[col][row] = group_bytes[p]
-                    p += 1
+        if length < 4:
+            if self.verbose:
+                print(f"[strip_ccsds_asm_pdu] PDU too short (len={length}), dropping.")
+            return
 
-            # Now read out row-wise to get codewords
-            for row in range(self.depth):
-                cw = bytearray(cw_len)
-                for col in range(cw_len):
-                    cw[col] = matrix[col][row]
-                codewords.append(cw)
+        # Check ASM
+        asm_bytes = in_bytes[:4]
+        if asm_bytes != self._asm:
+            if self.verbose:
+                print(
+                    "[strip_ccsds_asm_pdu] ASM mismatch, dropping PDU. "
+                    f"Got {asm_bytes.hex()}, expected {self._asm.hex()}"
+                )
+            return
+        else: 
+            if self.verbose:
+                print(
+                    "[strip_ccsds_asm_pdu] ASM match! "
+                    f"Got {asm_bytes.hex()}, expected {self._asm.hex()}"
+                )
+            return
 
-        return codewords
+        # Strip ASM, keep remainder (e.g. 255 bytes of RS codeword)
+        out_bytes = in_bytes[4:]
 
-    def _decode_blocks(self, codewords):
-        out = bytearray()
-        for cw in codewords:
-            try:
-                dec = self.rs.decode(bytes(cw))  # returns original 223 bytes
-                out.extend(dec)
-            except reedsolo.ReedSolomonError:
-                # drop or append zeros on failure; here we drop
-                pass
-        return out
+        # Convert back to u8vector
+        out_vec = pmt.init_u8vector(len(out_bytes), list(out_bytes))
 
-    def handle_pdu(self, pdu):
-        meta = pmt.car(pdu)
-        data = bytearray(pmt.u8vector_elements(pmt.cdr(pdu)))
-
-        codewords = self._deinterleave(data)
-        decoded = self._decode_blocks(codewords)
-
-        out_vec = pmt.init_u8vector(len(decoded), decoded)
+        # Preserve metadata; you could also add a flag here if you want, e.g. asm_ok=True
         out_pdu = pmt.cons(meta, out_vec)
-        self.message_port_pub(pmt.intern('out'), out_pdu)
+
+        # Publish on output port
+        self.message_port_pub(pmt.intern("out"), out_pdu)

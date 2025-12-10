@@ -161,6 +161,18 @@ blocks:
     coordinate: [640, 96.0]
     rotation: 0
     state: enabled
+- name: frame_len
+  id: variable
+  parameters:
+    comment: ''
+    value: '2072'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [864, 168.0]
+    rotation: 0
+    state: enabled
 - name: freq_offset
   id: variable_qtgui_range
   parameters:
@@ -308,7 +320,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [872, 168.0]
+    coordinate: [976, 168.0]
     rotation: 0
     state: enabled
 - name: rrc_taps
@@ -332,14 +344,14 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [984, 96.0]
+    coordinate: [984, 16.0]
     rotation: 0
     state: enabled
 - name: samp_rate
   id: variable
   parameters:
     comment: ''
-    value: '1000000'
+    value: '100000'
   states:
     bus_sink: false
     bus_source: false
@@ -454,7 +466,7 @@ blocks:
     bus_structure: null
     coordinate: [1688, 728.0]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: blocks_char_to_float_0
   id: blocks_char_to_float
   parameters:
@@ -471,7 +483,7 @@ blocks:
     bus_structure: null
     coordinate: [1096, 552.0]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: blocks_char_to_float_0_0
   id: blocks_char_to_float
   parameters:
@@ -488,7 +500,7 @@ blocks:
     bus_structure: null
     coordinate: [1096, 616.0]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: blocks_char_to_float_0_0_0
   id: blocks_char_to_float
   parameters:
@@ -505,7 +517,24 @@ blocks:
     bus_structure: null
     coordinate: [1128, 760.0]
     rotation: 0
-    state: enabled
+    state: disabled
+- name: blocks_char_to_float_1
+  id: blocks_char_to_float
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    scale: '1'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1184, 1520.0]
+    rotation: 0
+    state: disabled
 - name: blocks_delay_0
   id: blocks_delay
   parameters:
@@ -525,7 +554,7 @@ blocks:
     bus_structure: null
     coordinate: [944, 616.0]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: blocks_integrate_xx_0
   id: blocks_integrate_xx
   parameters:
@@ -543,7 +572,7 @@ blocks:
     bus_structure: null
     coordinate: [1272, 760.0]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: blocks_message_debug_0_1_0_0
   id: blocks_message_debug
   parameters:
@@ -556,9 +585,39 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [2304, 1320.0]
+    coordinate: [3120, 1296.0]
     rotation: 0
     state: enabled
+- name: blocks_message_debug_0_1_0_0_0
+  id: blocks_message_debug
+  parameters:
+    affinity: ''
+    alias: Input
+    comment: ''
+    en_uvec: 'True'
+    log_level: info
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [856, 976.0]
+    rotation: 0
+    state: disabled
+- name: blocks_message_debug_0_1_0_0_1
+  id: blocks_message_debug
+  parameters:
+    affinity: ''
+    alias: Output
+    comment: ''
+    en_uvec: 'True'
+    log_level: info
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [2696, 1152.0]
+    rotation: 0
+    state: disabled
 - name: blocks_multiply_const_vxx_0
   id: blocks_multiply_const_vxx
   parameters:
@@ -576,7 +635,7 @@ blocks:
     bus_structure: null
     coordinate: [1464, 760.0]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: blocks_tag_debug_0_0_0
   id: blocks_tag_debug
   parameters:
@@ -593,7 +652,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1824, 1416.0]
+    coordinate: [2008, 1392.0]
     rotation: 0
     state: disabled
 - name: blocks_tag_debug_0_0_0_0
@@ -612,7 +671,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1824, 1512.0]
+    coordinate: [2008, 1488.0]
     rotation: 0
     state: disabled
 - name: blocks_tag_debug_0_0_0_1
@@ -631,7 +690,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1296, 1424.0]
+    coordinate: [1480, 1400.0]
     rotation: 0
     state: disabled
 - name: blocks_tagged_stream_align_1
@@ -649,7 +708,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1568, 1344.0]
+    coordinate: [1752, 1320.0]
     rotation: 0
     state: enabled
 - name: blocks_throttle2_0_0
@@ -670,7 +729,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1280, 1144.0]
+    coordinate: [1464, 1120.0]
     rotation: 0
     state: enabled
 - name: blocks_unpack_k_bits_bb_1_0
@@ -688,7 +747,7 @@ blocks:
     bus_structure: null
     coordinate: [792, 616.0]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: blocks_xor_xx_0
   id: blocks_xor_xx
   parameters:
@@ -705,7 +764,7 @@ blocks:
     bus_structure: null
     coordinate: [1024, 752.0]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: channels_channel_model_0
   id: channels_channel_model
   parameters:
@@ -724,7 +783,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1472, 1112.0]
+    coordinate: [1656, 1088.0]
     rotation: 0
     state: enabled
 - name: digital_constellation_decoder_cb_0_0
@@ -740,7 +799,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [672, 1344.0]
+    coordinate: [856, 1320.0]
     rotation: 0
     state: enabled
 - name: digital_constellation_modulator_0_0
@@ -762,7 +821,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1040, 1128.0]
+    coordinate: [1224, 1104.0]
     rotation: 0
     state: enabled
 - name: digital_correlate_access_code_tag_xx_0
@@ -781,7 +840,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [968, 1328.0]
+    coordinate: [1152, 1304.0]
     rotation: 0
     state: enabled
 - name: digital_costas_loop_cc_0_0
@@ -799,7 +858,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [400, 1352.0]
+    coordinate: [584, 1328.0]
     rotation: 0
     state: enabled
 - name: digital_pfb_clock_sync_xxx_0_0
@@ -822,7 +881,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1752, 1104.0]
+    coordinate: [1936, 1080.0]
     rotation: 0
     state: enabled
 - name: epy_block_0
@@ -862,7 +921,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [432, 1160.0]
+    coordinate: [616, 1136.0]
     rotation: 0
     state: enabled
 - name: epy_block_0_0_0
@@ -910,7 +969,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [192, 1144.0]
+    coordinate: [128, 1120.0]
     rotation: 0
     state: enabled
 - name: epy_block_1
@@ -950,7 +1009,7 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
-    frame_len: '1816'
+    frame_len: frame_len
     maxoutbuf: '0'
     minoutbuf: '0'
     verbose: 'True'
@@ -964,7 +1023,57 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1296, 1336.0]
+    coordinate: [1480, 1312.0]
+    rotation: 0
+    state: enabled
+- name: epy_block_2
+  id: epy_block
+  parameters:
+    _source_code: "import pmt\nfrom gnuradio import gr\n\nclass blk(gr.basic_block):\n\
+      \    \"\"\"\n    PDU block that strips the CCSDS ASM (0x1A CF FC 1D) from the\
+      \ END of each PDU.\n\n    Input:  PDU (meta, u8vector) = [payload ... ASM]\n\
+      \    Output: PDU (meta, u8vector) = [payload ...]\n\n    If ASM is not found\
+      \ at the end, the PDU is dropped.\n    \"\"\"\n\n    def __init__(self, verbose=False):\n\
+      \        gr.basic_block.__init__(\n            self,\n            name=\"strip_ccsds_asm_pdu_end\"\
+      ,\n            in_sig=None,\n            out_sig=None,\n        )\n\n      \
+      \  self._asm = bytes([0x1A, 0xCF, 0xFC, 0x1D])\n        self.verbose = verbose\n\
+      \n        # Register ports\n        self.message_port_register_in(pmt.intern(\"\
+      in\"))\n        self.set_msg_handler(pmt.intern(\"in\"), self.handle_msg)\n\n\
+      \        self.message_port_register_out(pmt.intern(\"out\"))\n\n    def handle_msg(self,\
+      \ msg):\n        meta = pmt.car(msg)\n        data = pmt.cdr(msg)\n\n      \
+      \  if not pmt.is_u8vector(data):\n            if self.verbose:\n           \
+      \     print(\"[strip_ccsds_asm_pdu_end] Non-u8vector PDU, dropping.\")\n   \
+      \         return\n\n        in_bytes = bytes(bytearray(pmt.u8vector_elements(data)))\n\
+      \        length = len(in_bytes)\n\n        if length < 4:\n            if self.verbose:\n\
+      \                print(f\"[strip_ccsds_asm_pdu_end] PDU too short (len={length}),\
+      \ dropping.\")\n            return\n\n        # Extract last 4 bytes (expected\
+      \ location of ASM)\n        asm_bytes = in_bytes[-4:]\n\n        if asm_bytes\
+      \ != self._asm:\n            if self.verbose:\n                print(\n    \
+      \                \"[strip_ccsds_asm_pdu_end] ASM mismatch, dropping. \"\n  \
+      \                  f\"Got {asm_bytes.hex()}, expected {self._asm.hex()}\"\n\
+      \                )\n            return\n\n        if self.verbose:\n       \
+      \     print(\n                \"[strip_ccsds_asm_pdu_end] ASM match at END.\
+      \ \"\n                f\"Found {asm_bytes.hex()}\"\n            )\n\n      \
+      \  # Everything except the last 4 bytes (the ASM)\n        out_bytes = in_bytes[:-4]\n\
+      \n        # Convert back to u8vector\n        out_vec = pmt.init_u8vector(len(out_bytes),\
+      \ list(out_bytes))\n        out_pdu = pmt.cons(meta, out_vec)\n\n        # Publish\n\
+      \        self.message_port_pub(pmt.intern(\"out\"), out_pdu)"
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    verbose: 'True'
+  states:
+    _io_cache: '(''strip_ccsds_asm_pdu_end'', ''blk'', [(''verbose'', ''False'')],
+      [(''in'', ''message'', 1)], [(''out'', ''message'', 1)], ''\n    PDU block that
+      strips the CCSDS ASM (0x1A CF FC 1D) from the END of each PDU.\n\n    Input:  PDU
+      (meta, u8vector) = [payload ... ASM]\n    Output: PDU (meta, u8vector) = [payload
+      ...]\n\n    If ASM is not found at the end, the PDU is dropped.\n    '', [''verbose''])'
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [2520, 1320.0]
     rotation: 0
     state: enabled
 - name: epy_block_3
@@ -1009,7 +1118,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [2048, 1344.0]
+    coordinate: [2264, 1320.0]
     rotation: 0
     state: enabled
 - name: pdu_pdu_to_tagged_stream_0_0_0
@@ -1017,7 +1126,7 @@ blocks:
   parameters:
     affinity: ''
     alias: ''
-    comment: ''
+    comment: Tagged Stream in Bytes
     maxoutbuf: '0'
     minoutbuf: '0'
     tag: '"stream_tag"'
@@ -1026,7 +1135,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [672, 1152.0]
+    coordinate: [856, 1128.0]
     rotation: 0
     state: enabled
 - name: pdu_tagged_stream_to_pdu_0_0_0_0
@@ -1043,7 +1152,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1824, 1344.0]
+    coordinate: [2008, 1320.0]
     rotation: 0
     state: enabled
 - name: qtgui_const_sink_x_0_0_0
@@ -1135,7 +1244,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [672, 1416.0]
+    coordinate: [856, 1392.0]
     rotation: 0
     state: enabled
 - name: qtgui_const_sink_x_0_0_0_0
@@ -1227,7 +1336,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1272, 912.0]
+    coordinate: [1456, 888.0]
     rotation: 0
     state: enabled
 - name: qtgui_freq_sink_x_0
@@ -1308,7 +1417,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1280, 1040.0]
+    coordinate: [1464, 1016.0]
     rotation: 0
     state: enabled
 - name: qtgui_time_sink_x_0
@@ -1407,6 +1516,137 @@ blocks:
     bus_structure: null
     coordinate: [1264, 552.0]
     rotation: 0
+    state: disabled
+- name: qtgui_time_sink_x_0_0
+  id: qtgui_time_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'True'
+    axislabels: 'True'
+    color1: blue
+    color10: dark blue
+    color2: red
+    color3: green
+    color4: black
+    color5: cyan
+    color6: magenta
+    color7: yellow
+    color8: dark red
+    color9: dark green
+    comment: ''
+    ctrlpanel: 'False'
+    entags: 'True'
+    grid: 'False'
+    gui_hint: ''
+    label1: Signal 1
+    label10: Signal 10
+    label2: Signal 2
+    label3: Signal 3
+    label4: Signal 4
+    label5: Signal 5
+    label6: Signal 6
+    label7: Signal 7
+    label8: Signal 8
+    label9: Signal 9
+    legend: 'True'
+    marker1: '-1'
+    marker10: '-1'
+    marker2: '-1'
+    marker3: '-1'
+    marker4: '-1'
+    marker5: '-1'
+    marker6: '-1'
+    marker7: '-1'
+    marker8: '-1'
+    marker9: '-1'
+    name: '""'
+    nconnections: '1'
+    size: '1024'
+    srate: samp_rate
+    stemplot: 'False'
+    style1: '1'
+    style10: '1'
+    style2: '1'
+    style3: '1'
+    style4: '1'
+    style5: '1'
+    style6: '1'
+    style7: '1'
+    style8: '1'
+    style9: '1'
+    tr_chan: '0'
+    tr_delay: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_slope: qtgui.TRIG_SLOPE_POS
+    tr_tag: '""'
+    type: float
+    update_time: '0.10'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    ylabel: Amplitude
+    ymax: '2'
+    ymin: '-1'
+    yunit: '""'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1336, 1504.0]
+    rotation: 0
+    state: disabled
+- name: satellites_decode_rs_ccsds_0
+  id: satellites_decode_rs_ccsds
+  parameters:
+    affinity: ''
+    alias: ''
+    basis: 'False'
+    comment: ''
+    interleave: '1'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [2776, 1312.0]
+    rotation: 0
+    state: enabled
+- name: satellites_encode_rs_ccsds_0
+  id: satellites_encode_rs_ccsds
+  parameters:
+    affinity: ''
+    alias: ''
+    basis: 'False'
+    comment: ''
+    interleave: '1'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [368, 1120.0]
+    rotation: 0
     state: enabled
 - name: virtual_sink_0_1
   id: virtual_sink
@@ -1418,7 +1658,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [2032, 1104.0]
+    coordinate: [2216, 1080.0]
     rotation: 0
     state: enabled
 - name: virtual_sink_1
@@ -1431,7 +1671,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [992, 1456.0]
+    coordinate: [1176, 1432.0]
     rotation: 0
     state: enabled
 - name: virtual_sink_1_0
@@ -1444,7 +1684,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [944, 1256.0]
+    coordinate: [1176, 1232.0]
     rotation: 0
     state: enabled
 - name: virtual_source_0_2
@@ -1457,7 +1697,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [192, 1376.0]
+    coordinate: [376, 1352.0]
     rotation: 0
     state: enabled
 - name: virtual_source_1
@@ -1472,7 +1712,7 @@ blocks:
     bus_structure: null
     coordinate: [648, 552.0]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: virtual_source_1_0
   id: virtual_source
   parameters:
@@ -1485,12 +1725,13 @@ blocks:
     bus_structure: null
     coordinate: [648, 616.0]
     rotation: 0
-    state: enabled
+    state: disabled
 
 connections:
 - [blocks_char_to_float_0, '0', qtgui_time_sink_x_0, '0']
 - [blocks_char_to_float_0_0, '0', qtgui_time_sink_x_0, '1']
 - [blocks_char_to_float_0_0_0, '0', blocks_integrate_xx_0, '0']
+- [blocks_char_to_float_1, '0', qtgui_time_sink_x_0_0, '0']
 - [blocks_delay_0, '0', blocks_char_to_float_0_0, '0']
 - [blocks_delay_0, '0', blocks_xor_xx_0, '1']
 - [blocks_integrate_xx_0, '0', blocks_multiply_const_vxx_0, '0']
@@ -1502,6 +1743,7 @@ connections:
 - [blocks_unpack_k_bits_bb_1_0, '0', blocks_delay_0, '0']
 - [blocks_xor_xx_0, '0', blocks_char_to_float_0_0_0, '0']
 - [channels_channel_model_0, '0', digital_pfb_clock_sync_xxx_0_0, '0']
+- [digital_constellation_decoder_cb_0_0, '0', blocks_char_to_float_1, '0']
 - [digital_constellation_decoder_cb_0_0, '0', digital_correlate_access_code_tag_xx_0,
   '0']
 - [digital_constellation_decoder_cb_0_0, '0', virtual_sink_1, '0']
@@ -1513,13 +1755,18 @@ connections:
 - [digital_costas_loop_cc_0_0, '0', digital_constellation_decoder_cb_0_0, '0']
 - [digital_costas_loop_cc_0_0, '0', qtgui_const_sink_x_0_0_0, '0']
 - [digital_pfb_clock_sync_xxx_0_0, '0', virtual_sink_0_1, '0']
+- [epy_block_0, out, blocks_message_debug_0_1_0_0_0, print]
 - [epy_block_0, out, pdu_pdu_to_tagged_stream_0_0_0, pdus]
-- [epy_block_0_0_0, out, epy_block_0, in]
+- [epy_block_0_0_0, out, satellites_encode_rs_ccsds_0, in]
 - [epy_block_1, '0', blocks_tagged_stream_align_1, '0']
-- [epy_block_3, out, blocks_message_debug_0_1_0_0, print]
+- [epy_block_2, out, satellites_decode_rs_ccsds_0, in]
+- [epy_block_3, out, blocks_message_debug_0_1_0_0_1, print]
+- [epy_block_3, out, epy_block_2, in]
 - [pdu_pdu_to_tagged_stream_0_0_0, '0', digital_constellation_modulator_0_0, '0']
 - [pdu_pdu_to_tagged_stream_0_0_0, '0', virtual_sink_1_0, '0']
 - [pdu_tagged_stream_to_pdu_0_0_0_0, pdus, epy_block_3, in]
+- [satellites_decode_rs_ccsds_0, out, blocks_message_debug_0_1_0_0, print]
+- [satellites_encode_rs_ccsds_0, out, epy_block_0, in]
 - [virtual_source_0_2, '0', digital_costas_loop_cc_0_0, '0']
 - [virtual_source_1, '0', blocks_char_to_float_0, '0']
 - [virtual_source_1, '0', blocks_xor_xx_0, '0']

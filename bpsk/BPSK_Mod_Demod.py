@@ -29,7 +29,9 @@ from gnuradio import gr, pdu
 import BPSK_Mod_Demod_epy_block_0 as epy_block_0  # embedded python block
 import BPSK_Mod_Demod_epy_block_0_0_0 as epy_block_0_0_0  # embedded python block
 import BPSK_Mod_Demod_epy_block_1 as epy_block_1  # embedded python block
+import BPSK_Mod_Demod_epy_block_2 as epy_block_2  # embedded python block
 import BPSK_Mod_Demod_epy_block_3 as epy_block_3  # embedded python block
+import satellites
 import sip
 import threading
 
@@ -76,7 +78,7 @@ class BPSK_Mod_Demod(gr.top_block, Qt.QWidget):
         self.depth = depth = 1
         self.frame_bytes = frame_bytes = payload_coded_len* depth
         self.sps = sps = 4
-        self.samp_rate = samp_rate = 1000000
+        self.samp_rate = samp_rate = 100000
         self.nfilts = nfilts = 16
         self.frame_bits = frame_bits = frame_bytes*8
         self.excess_bw = excess_bw = 0.250
@@ -92,9 +94,10 @@ class BPSK_Mod_Demod(gr.top_block, Qt.QWidget):
         self.len_tag_key = len_tag_key = "frame_len"
         self.gen_poly = gen_poly = 285
         self.freq_offset = freq_offset = 0
+        self.frame_len = frame_len = 2072
         self.format_key = format_key = "protocol_packet"
         self.first_root = first_root = 112
-        self.delay = delay = 30
+        self.delay = delay = 29
         self.decode_bits = decode_bits = int(frame_bits/8)
         self.bpsk = bpsk = digital.constellation_bpsk().base()
         self.bpsk.set_npwr(1.0)
@@ -113,54 +116,8 @@ class BPSK_Mod_Demod(gr.top_block, Qt.QWidget):
         self._freq_offset_range = qtgui.Range(-100e-2 * (1/samp_rate), 100e-2 * (1/samp_rate), 10e-2 * (1/samp_rate), 0, 200)
         self._freq_offset_win = qtgui.RangeWidget(self._freq_offset_range, self.set_freq_offset, "Channel: Freq Offset", "counter_slider", float, QtCore.Qt.Horizontal)
         self.top_layout.addWidget(self._freq_offset_win)
-        self.qtgui_time_sink_x_0 = qtgui.time_sink_f(
-            1024, #size
-            samp_rate, #samp_rate
-            "", #name
-            2, #number of inputs
-            None # parent
-        )
-        self.qtgui_time_sink_x_0.set_update_time(0.10)
-        self.qtgui_time_sink_x_0.set_y_axis(-1, 2)
-
-        self.qtgui_time_sink_x_0.set_y_label('Amplitude', "")
-
-        self.qtgui_time_sink_x_0.enable_tags(True)
-        self.qtgui_time_sink_x_0.set_trigger_mode(qtgui.TRIG_MODE_FREE, qtgui.TRIG_SLOPE_POS, 0.0, 0, 0, "")
-        self.qtgui_time_sink_x_0.enable_autoscale(True)
-        self.qtgui_time_sink_x_0.enable_grid(False)
-        self.qtgui_time_sink_x_0.enable_axis_labels(True)
-        self.qtgui_time_sink_x_0.enable_control_panel(False)
-        self.qtgui_time_sink_x_0.enable_stem_plot(False)
-
-
-        labels = ['Signal 1', 'Signal 2', 'Signal 3', 'Signal 4', 'Signal 5',
-            'Signal 6', 'Signal 7', 'Signal 8', 'Signal 9', 'Signal 10']
-        widths = [1, 1, 1, 1, 1,
-            1, 1, 1, 1, 1]
-        colors = ['blue', 'red', 'green', 'black', 'cyan',
-            'magenta', 'yellow', 'dark red', 'dark green', 'dark blue']
-        alphas = [1.0, 1.0, 1.0, 1.0, 1.0,
-            1.0, 1.0, 1.0, 1.0, 1.0]
-        styles = [1, 1, 1, 1, 1,
-            1, 1, 1, 1, 1]
-        markers = [-1, -1, -1, -1, -1,
-            -1, -1, -1, -1, -1]
-
-
-        for i in range(2):
-            if len(labels[i]) == 0:
-                self.qtgui_time_sink_x_0.set_line_label(i, "Data {0}".format(i))
-            else:
-                self.qtgui_time_sink_x_0.set_line_label(i, labels[i])
-            self.qtgui_time_sink_x_0.set_line_width(i, widths[i])
-            self.qtgui_time_sink_x_0.set_line_color(i, colors[i])
-            self.qtgui_time_sink_x_0.set_line_style(i, styles[i])
-            self.qtgui_time_sink_x_0.set_line_marker(i, markers[i])
-            self.qtgui_time_sink_x_0.set_line_alpha(i, alphas[i])
-
-        self._qtgui_time_sink_x_0_win = sip.wrapinstance(self.qtgui_time_sink_x_0.qwidget(), Qt.QWidget)
-        self.top_layout.addWidget(self._qtgui_time_sink_x_0_win)
+        self.satellites_encode_rs_ccsds_0 = satellites.encode_rs(False, 1)
+        self.satellites_decode_rs_ccsds_0 = satellites.decode_rs(False, 1)
         self.qtgui_freq_sink_x_0 = qtgui.freq_sink_c(
             1024, #size
             window.WIN_BLACKMAN_hARRIS, #wintype
@@ -292,7 +249,8 @@ class BPSK_Mod_Demod(gr.top_block, Qt.QWidget):
         self.pdu_tagged_stream_to_pdu_0_0_0_0 = pdu.tagged_stream_to_pdu(gr.types.byte_t, "frame_len")
         self.pdu_pdu_to_tagged_stream_0_0_0 = pdu.pdu_to_tagged_stream(gr.types.byte_t, "stream_tag")
         self.epy_block_3 = epy_block_3.blk(verbose=True)
-        self.epy_block_1 = epy_block_1.blk(frame_len=1816, verbose=True)
+        self.epy_block_2 = epy_block_2.blk(verbose=True)
+        self.epy_block_1 = epy_block_1.blk(frame_len=frame_len, verbose=True)
         self.epy_block_0_0_0 = epy_block_0_0_0.TestPatternSource_PDU(payload_len=payload_len_int, interval_ms=100)
         self.epy_block_0 = epy_block_0.blk()
         self.digital_pfb_clock_sync_xxx_0_0 = digital.pfb_clock_sync_ccf(sps, excess_bw, rrc_taps, 16, 8, 1.5, 1)
@@ -315,74 +273,25 @@ class BPSK_Mod_Demod(gr.top_block, Qt.QWidget):
             taps=[1.0],
             noise_seed=0,
             block_tags=False)
-        self.blocks_xor_xx_0 = blocks.xor_bb()
-        self.blocks_unpack_k_bits_bb_1_0 = blocks.unpack_k_bits_bb(8)
         self.blocks_throttle2_0_0 = blocks.throttle( gr.sizeof_gr_complex*1, samp_rate, True, 0 if "auto" == "auto" else max( int(float(0.1) * samp_rate) if "auto" == "time" else int(0.1), 1) )
         self.blocks_tagged_stream_align_1 = blocks.tagged_stream_align(gr.sizeof_char*1, "frame_len")
-        self.blocks_multiply_const_vxx_0 = blocks.multiply_const_ff(0.010)
         self.blocks_message_debug_0_1_0_0 = blocks.message_debug(True, gr.log_levels.info)
         self.blocks_message_debug_0_1_0_0.set_block_alias("Output")
-        self.blocks_integrate_xx_0 = blocks.integrate_ff(100, 1)
-        self.blocks_delay_0 = blocks.delay(gr.sizeof_char*1, delay)
-        self.blocks_char_to_float_0_0_0 = blocks.char_to_float(1, 1)
-        self.blocks_char_to_float_0_0 = blocks.char_to_float(1, 1)
-        self.blocks_char_to_float_0 = blocks.char_to_float(1, 1)
-        self.BER = qtgui.number_sink(
-            gr.sizeof_float,
-            0,
-            qtgui.NUM_GRAPH_NONE,
-            1,
-            None # parent
-        )
-        self.BER.set_update_time(0.10)
-        self.BER.set_title('BER')
-
-        labels = ['', '', '', '', '',
-            '', '', '', '', '']
-        units = ['', '', '', '', '',
-            '', '', '', '', '']
-        colors = [("black", "black"), ("black", "black"), ("black", "black"), ("black", "black"), ("black", "black"),
-            ("black", "black"), ("black", "black"), ("black", "black"), ("black", "black"), ("black", "black")]
-        factor = [1, 1, 1, 1, 1,
-            1, 1, 1, 1, 1]
-
-        for i in range(1):
-            self.BER.set_min(i, -1)
-            self.BER.set_max(i, 1)
-            self.BER.set_color(i, colors[i][0], colors[i][1])
-            if len(labels[i]) == 0:
-                self.BER.set_label(i, "Data {0}".format(i))
-            else:
-                self.BER.set_label(i, labels[i])
-            self.BER.set_unit(i, units[i])
-            self.BER.set_factor(i, factor[i])
-
-        self.BER.enable_autoscale(True)
-        self._BER_win = sip.wrapinstance(self.BER.qwidget(), Qt.QWidget)
-        self.top_layout.addWidget(self._BER_win)
 
 
         ##################################################
         # Connections
         ##################################################
         self.msg_connect((self.epy_block_0, 'out'), (self.pdu_pdu_to_tagged_stream_0_0_0, 'pdus'))
-        self.msg_connect((self.epy_block_0_0_0, 'out'), (self.epy_block_0, 'in'))
-        self.msg_connect((self.epy_block_3, 'out'), (self.blocks_message_debug_0_1_0_0, 'print'))
+        self.msg_connect((self.epy_block_0_0_0, 'out'), (self.satellites_encode_rs_ccsds_0, 'in'))
+        self.msg_connect((self.epy_block_2, 'out'), (self.satellites_decode_rs_ccsds_0, 'in'))
+        self.msg_connect((self.epy_block_3, 'out'), (self.epy_block_2, 'in'))
         self.msg_connect((self.pdu_tagged_stream_to_pdu_0_0_0_0, 'pdus'), (self.epy_block_3, 'in'))
-        self.connect((self.blocks_char_to_float_0, 0), (self.qtgui_time_sink_x_0, 0))
-        self.connect((self.blocks_char_to_float_0_0, 0), (self.qtgui_time_sink_x_0, 1))
-        self.connect((self.blocks_char_to_float_0_0_0, 0), (self.blocks_integrate_xx_0, 0))
-        self.connect((self.blocks_delay_0, 0), (self.blocks_char_to_float_0_0, 0))
-        self.connect((self.blocks_delay_0, 0), (self.blocks_xor_xx_0, 1))
-        self.connect((self.blocks_integrate_xx_0, 0), (self.blocks_multiply_const_vxx_0, 0))
-        self.connect((self.blocks_multiply_const_vxx_0, 0), (self.BER, 0))
+        self.msg_connect((self.satellites_decode_rs_ccsds_0, 'out'), (self.blocks_message_debug_0_1_0_0, 'print'))
+        self.msg_connect((self.satellites_encode_rs_ccsds_0, 'out'), (self.epy_block_0, 'in'))
         self.connect((self.blocks_tagged_stream_align_1, 0), (self.pdu_tagged_stream_to_pdu_0_0_0_0, 0))
         self.connect((self.blocks_throttle2_0_0, 0), (self.channels_channel_model_0, 0))
-        self.connect((self.blocks_unpack_k_bits_bb_1_0, 0), (self.blocks_delay_0, 0))
-        self.connect((self.blocks_xor_xx_0, 0), (self.blocks_char_to_float_0_0_0, 0))
         self.connect((self.channels_channel_model_0, 0), (self.digital_pfb_clock_sync_xxx_0_0, 0))
-        self.connect((self.digital_constellation_decoder_cb_0_0, 0), (self.blocks_char_to_float_0, 0))
-        self.connect((self.digital_constellation_decoder_cb_0_0, 0), (self.blocks_xor_xx_0, 0))
         self.connect((self.digital_constellation_decoder_cb_0_0, 0), (self.digital_correlate_access_code_tag_xx_0, 0))
         self.connect((self.digital_constellation_modulator_0_0, 0), (self.blocks_throttle2_0_0, 0))
         self.connect((self.digital_constellation_modulator_0_0, 0), (self.qtgui_const_sink_x_0_0_0_0, 0))
@@ -392,7 +301,6 @@ class BPSK_Mod_Demod(gr.top_block, Qt.QWidget):
         self.connect((self.digital_costas_loop_cc_0_0, 0), (self.qtgui_const_sink_x_0_0_0, 0))
         self.connect((self.digital_pfb_clock_sync_xxx_0_0, 0), (self.digital_costas_loop_cc_0_0, 0))
         self.connect((self.epy_block_1, 0), (self.blocks_tagged_stream_align_1, 0))
-        self.connect((self.pdu_pdu_to_tagged_stream_0_0_0, 0), (self.blocks_unpack_k_bits_bb_1_0, 0))
         self.connect((self.pdu_pdu_to_tagged_stream_0_0_0, 0), (self.digital_constellation_modulator_0_0, 0))
 
 
@@ -449,7 +357,6 @@ class BPSK_Mod_Demod(gr.top_block, Qt.QWidget):
         self.set_symbol_rate(self.samp_rate/self.sps)
         self.blocks_throttle2_0_0.set_sample_rate(self.samp_rate)
         self.qtgui_freq_sink_x_0.set_frequency_range(0, self.samp_rate)
-        self.qtgui_time_sink_x_0.set_samp_rate(self.samp_rate)
 
     def get_nfilts(self):
         return self.nfilts
@@ -550,6 +457,13 @@ class BPSK_Mod_Demod(gr.top_block, Qt.QWidget):
         self.freq_offset = freq_offset
         self.channels_channel_model_0.set_frequency_offset(self.freq_offset)
 
+    def get_frame_len(self):
+        return self.frame_len
+
+    def set_frame_len(self, frame_len):
+        self.frame_len = frame_len
+        self.epy_block_1.frame_len = self.frame_len
+
     def get_format_key(self):
         return self.format_key
 
@@ -567,7 +481,6 @@ class BPSK_Mod_Demod(gr.top_block, Qt.QWidget):
 
     def set_delay(self, delay):
         self.delay = delay
-        self.blocks_delay_0.set_dly(int(self.delay))
 
     def get_decode_bits(self):
         return self.decode_bits

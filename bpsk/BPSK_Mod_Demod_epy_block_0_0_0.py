@@ -46,10 +46,13 @@ class TestPatternSource_PDU(gr.basic_block):
         payload[1] = seq & 0xFF
 
         # simple pattern: incrementing bytes
-        for i in range(2, self.payload_len):
+        ## simpler pattern enabled: same byte every time. 
+        for i in range(1, self.payload_len):
             payload[i] = (i + seq) & 0xFF
+            #payload[i] = (i) & 0xFF
 
-        self.seq = (self.seq + 1) & 0xFFFF
+        #self.seq = (self.seq + 1) & 0xFFFF
+        self.seq = (self.seq) & 0xFFFF
         return payload
 
     def _worker(self):

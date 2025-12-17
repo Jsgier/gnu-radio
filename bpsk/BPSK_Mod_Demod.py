@@ -81,7 +81,6 @@ class BPSK_Mod_Demod(gr.top_block, Qt.QWidget):
         self.nfilts = nfilts = 32
         self.frame_bits = frame_bits = frame_bytes*8
         self.excess_bw = excess_bw = 0.250
-        self.delay_bit = delay_bit = 16
         self.time_offset = time_offset = 1
         self.symbol_rate = symbol_rate = samp_rate/sps
         self.rs_generator = rs_generator = 291
@@ -97,8 +96,9 @@ class BPSK_Mod_Demod(gr.top_block, Qt.QWidget):
         self.frame_len = frame_len = 2072
         self.format_key = format_key = "protocol_packet"
         self.first_root = first_root = 112
-        self.delay_constellation = delay_constellation = delay_bit * 2
-        self.delay_byte = delay_byte = delay_bit * 2
+        self.delay_constellation = delay_constellation = 32
+        self.delay_byte = delay_byte = 33
+        self.delay_bit = delay_bit = 24
         self.decode_bits = decode_bits = int(frame_bits/8)
         self.cc_enc_def = cc_enc_def = fec.cc_encoder_make((frame_size * 8 ),7, 2, [-109,79], 0, fec.CC_STREAMING, False)
         self.cc_dec_def = cc_dec_def = fec.cc_decoder.make((frame_size  * 8 ),7, 2, [-109,79], 0, (-1), fec.CC_STREAMING, False)
@@ -347,8 +347,10 @@ class BPSK_Mod_Demod(gr.top_block, Qt.QWidget):
         self.top_layout.addWidget(self._qtgui_const_sink_x_0_0_0_win)
         self.fec_extended_encoder_1_0_0 = fec.extended_encoder(encoder_obj_list=cc_enc_def, threading='capillary', puncpat=puncpat)
         self.fec_extended_decoder_0_1_0 = fec.extended_decoder(decoder_obj_list=cc_dec_def, threading='capillary', ann=None, puncpat=puncpat, integration_period=10000)
+        self.digital_scrambler_bb_0 = digital.scrambler_bb(0x9A, 0xFF, 7)
         self.digital_pfb_clock_sync_xxx_0_0 = digital.pfb_clock_sync_ccf(sps, excess_bw, rrc_taps, nfilts, 0, 1.5, 1)
         self.digital_map_bb_0_0_0_0 = digital.map_bb([-1,1])
+        self.digital_descrambler_bb_0 = digital.descrambler_bb(0x9A, 0xFF, 7)
         self.digital_costas_loop_cc_0_0 = digital.costas_loop_cc(0.2, 4, True)
         self.digital_constellation_modulator_0_0 = digital.generic_mod(
             constellation=bpsk,
@@ -367,16 +369,16 @@ class BPSK_Mod_Demod(gr.top_block, Qt.QWidget):
             taps=[1.0],
             noise_seed=0,
             block_tags=False)
-        self.blocks_vector_source_x_0_1_0 = blocks.vector_source_b((frame_size//15)*[0, 0, 1, 0, 3, 0, 7, 0, 15, 0, 31, 0, 63, 0, 127], True, 1, [])
+        self.blocks_vector_source_x_0_1_0_0 = blocks.vector_source_b((frame_size//15)*[0, 0, 1, 0, 3, 0, 7, 0, 15, 0, 31, 0, 63, 0, 127], True, 1, [])
+        self.blocks_unpack_k_bits_bb_2_1 = blocks.unpack_k_bits_bb(8)
         self.blocks_unpack_k_bits_bb_2_0 = blocks.unpack_k_bits_bb(8)
-        self.blocks_unpack_k_bits_bb_2 = blocks.unpack_k_bits_bb(8)
         self.blocks_throttle2_0 = blocks.throttle( gr.sizeof_gr_complex*1, samp_rate, True, 0 if "auto" == "auto" else max( int(float(0.1) * samp_rate) if "auto" == "time" else int(0.1), 1) )
         self.blocks_pack_k_bits_bb_1_0_0_0 = blocks.pack_k_bits_bb(8)
         self.blocks_pack_k_bits_bb_1_0 = blocks.pack_k_bits_bb(8)
         self.blocks_delay_3 = blocks.delay(gr.sizeof_gr_complex*1, 3)
         self.blocks_delay_2 = blocks.delay(gr.sizeof_char*1, delay_constellation)
         self.blocks_delay_1_0 = blocks.delay(gr.sizeof_char*1, delay_byte)
-        self.blocks_delay_1 = blocks.delay(gr.sizeof_char*1, 16)
+        self.blocks_delay_1 = blocks.delay(gr.sizeof_char*1, delay_bit)
         self.blocks_char_to_float_0_2_0 = blocks.char_to_float(1, 1)
         self.blocks_char_to_float_0_1_0_1_0 = blocks.char_to_float(1, 1)
         self.blocks_char_to_float_0_1_0_1 = blocks.char_to_float(1, 1)
@@ -403,22 +405,24 @@ class BPSK_Mod_Demod(gr.top_block, Qt.QWidget):
         self.connect((self.blocks_pack_k_bits_bb_1_0, 0), (self.digital_constellation_modulator_0_0, 0))
         self.connect((self.blocks_pack_k_bits_bb_1_0_0_0, 0), (self.blocks_char_to_float_0_1_0_1_0, 0))
         self.connect((self.blocks_throttle2_0, 0), (self.channels_channel_model_0, 0))
-        self.connect((self.blocks_unpack_k_bits_bb_2, 0), (self.fec_extended_encoder_1_0_0, 0))
         self.connect((self.blocks_unpack_k_bits_bb_2_0, 0), (self.blocks_delay_1, 0))
-        self.connect((self.blocks_vector_source_x_0_1_0, 0), (self.blocks_delay_1_0, 0))
-        self.connect((self.blocks_vector_source_x_0_1_0, 0), (self.blocks_unpack_k_bits_bb_2, 0))
-        self.connect((self.blocks_vector_source_x_0_1_0, 0), (self.blocks_unpack_k_bits_bb_2_0, 0))
+        self.connect((self.blocks_unpack_k_bits_bb_2_1, 0), (self.digital_scrambler_bb_0, 0))
+        self.connect((self.blocks_vector_source_x_0_1_0_0, 0), (self.blocks_delay_1_0, 0))
+        self.connect((self.blocks_vector_source_x_0_1_0_0, 0), (self.blocks_unpack_k_bits_bb_2_0, 0))
+        self.connect((self.blocks_vector_source_x_0_1_0_0, 0), (self.blocks_unpack_k_bits_bb_2_1, 0))
         self.connect((self.channels_channel_model_0, 0), (self.digital_pfb_clock_sync_xxx_0_0, 0))
         self.connect((self.digital_constellation_decoder_cb_0, 0), (self.blocks_char_to_float_0_1_0_0_1_0_1, 0))
         self.connect((self.digital_constellation_decoder_cb_0, 0), (self.digital_map_bb_0_0_0_0, 0))
         self.connect((self.digital_constellation_modulator_0_0, 0), (self.blocks_throttle2_0, 0))
         self.connect((self.digital_costas_loop_cc_0_0, 0), (self.blocks_delay_3, 0))
         self.connect((self.digital_costas_loop_cc_0_0, 0), (self.qtgui_const_sink_x_0_0_0, 0))
+        self.connect((self.digital_descrambler_bb_0, 0), (self.blocks_char_to_float_0_1_0_0_0, 0))
+        self.connect((self.digital_descrambler_bb_0, 0), (self.blocks_pack_k_bits_bb_1_0_0_0, 0))
         self.connect((self.digital_map_bb_0_0_0_0, 0), (self.blocks_char_to_float_0_2_0, 0))
         self.connect((self.digital_pfb_clock_sync_xxx_0_0, 0), (self.digital_costas_loop_cc_0_0, 0))
         self.connect((self.digital_pfb_clock_sync_xxx_0_0, 0), (self.qtgui_const_sink_x_0_0_0_0, 0))
-        self.connect((self.fec_extended_decoder_0_1_0, 0), (self.blocks_char_to_float_0_1_0_0_0, 0))
-        self.connect((self.fec_extended_decoder_0_1_0, 0), (self.blocks_pack_k_bits_bb_1_0_0_0, 0))
+        self.connect((self.digital_scrambler_bb_0, 0), (self.fec_extended_encoder_1_0_0, 0))
+        self.connect((self.fec_extended_decoder_0_1_0, 0), (self.digital_descrambler_bb_0, 0))
         self.connect((self.fec_extended_encoder_1_0_0, 0), (self.blocks_delay_2, 0))
         self.connect((self.fec_extended_encoder_1_0_0, 0), (self.blocks_pack_k_bits_bb_1_0, 0))
 
@@ -436,7 +440,7 @@ class BPSK_Mod_Demod(gr.top_block, Qt.QWidget):
 
     def set_frame_size(self, frame_size):
         self.frame_size = frame_size
-        self.blocks_vector_source_x_0_1_0.set_data((self.frame_size//15)*[0, 0, 1, 0, 3, 0, 7, 0, 15, 0, 31, 0, 63, 0, 127], [])
+        self.blocks_vector_source_x_0_1_0_0.set_data((self.frame_size//15)*[0, 0, 1, 0, 3, 0, 7, 0, 15, 0, 31, 0, 63, 0, 127], [])
 
     def get_puncpat(self):
         return self.puncpat
@@ -512,14 +516,6 @@ class BPSK_Mod_Demod(gr.top_block, Qt.QWidget):
         self.excess_bw = excess_bw
         self.set_rrc_taps(firdes.root_raised_cosine(self.nfilts, self.nfilts, 1.0/float(self.sps), self.excess_bw, self.nfilts*11*self.sps))
         self.digital_pfb_clock_sync_xxx_0_0.set_loop_bandwidth(self.excess_bw)
-
-    def get_delay_bit(self):
-        return self.delay_bit
-
-    def set_delay_bit(self, delay_bit):
-        self.delay_bit = delay_bit
-        self.set_delay_byte(self.delay_bit * 2)
-        self.set_delay_constellation(self.delay_bit * 2)
 
     def get_time_offset(self):
         return self.time_offset
@@ -628,6 +624,13 @@ class BPSK_Mod_Demod(gr.top_block, Qt.QWidget):
     def set_delay_byte(self, delay_byte):
         self.delay_byte = delay_byte
         self.blocks_delay_1_0.set_dly(int(self.delay_byte))
+
+    def get_delay_bit(self):
+        return self.delay_bit
+
+    def set_delay_bit(self, delay_bit):
+        self.delay_bit = delay_bit
+        self.blocks_delay_1.set_dly(int(self.delay_bit))
 
     def get_decode_bits(self):
         return self.decode_bits

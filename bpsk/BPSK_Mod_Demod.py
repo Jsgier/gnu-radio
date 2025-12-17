@@ -13,6 +13,7 @@ from PyQt5 import Qt
 from gnuradio import qtgui
 from PyQt5 import QtCore
 from gnuradio import blocks
+from gnuradio import blocks, gr
 from gnuradio import channels
 from gnuradio.filter import firdes
 from gnuradio import digital
@@ -25,6 +26,13 @@ from PyQt5 import Qt
 from argparse import ArgumentParser
 from gnuradio.eng_arg import eng_float, intx
 from gnuradio import eng_notation
+from gnuradio import gr, pdu
+import BPSK_Mod_Demod_epy_block_0 as epy_block_0  # embedded python block
+import BPSK_Mod_Demod_epy_block_0_0_0 as epy_block_0_0_0  # embedded python block
+import BPSK_Mod_Demod_epy_block_1 as epy_block_1  # embedded python block
+import BPSK_Mod_Demod_epy_block_2 as epy_block_2  # embedded python block
+import BPSK_Mod_Demod_epy_block_3 as epy_block_3  # embedded python block
+import satellites
 import sip
 import threading
 
@@ -119,6 +127,8 @@ class BPSK_Mod_Demod(gr.top_block, Qt.QWidget):
         self._freq_offset_range = qtgui.Range(-100e-2 * (1/samp_rate), 100e-2 * (1/samp_rate), 10e-2 * (1/samp_rate), 0, 200)
         self._freq_offset_win = qtgui.RangeWidget(self._freq_offset_range, self.set_freq_offset, "Channel: Freq Offset", "counter_slider", float, QtCore.Qt.Horizontal)
         self.top_layout.addWidget(self._freq_offset_win)
+        self.satellites_encode_rs_ccsds_0 = satellites.encode_rs(False, 1)
+        self.satellites_decode_rs_ccsds_0 = satellites.decode_rs(False, 1)
         self.qtgui_time_sink_x_1_0 = qtgui.time_sink_f(
             1024, #size
             samp_rate, #samp_rate
@@ -345,13 +355,21 @@ class BPSK_Mod_Demod(gr.top_block, Qt.QWidget):
 
         self._qtgui_const_sink_x_0_0_0_win = sip.wrapinstance(self.qtgui_const_sink_x_0_0_0.qwidget(), Qt.QWidget)
         self.top_layout.addWidget(self._qtgui_const_sink_x_0_0_0_win)
+        self.pdu_tagged_stream_to_pdu_0_0_0_0 = pdu.tagged_stream_to_pdu(gr.types.byte_t, "frame_len")
+        self.pdu_pdu_to_tagged_stream_0_0_0 = pdu.pdu_to_tagged_stream(gr.types.byte_t, "stream_tag")
         self.fec_extended_encoder_1_0_0 = fec.extended_encoder(encoder_obj_list=cc_enc_def, threading='capillary', puncpat=puncpat)
         self.fec_extended_decoder_0_1_0 = fec.extended_decoder(decoder_obj_list=cc_dec_def, threading='capillary', ann=None, puncpat=puncpat, integration_period=10000)
+        self.epy_block_3 = epy_block_3.blk(verbose=True)
+        self.epy_block_2 = epy_block_2.blk(verbose=True)
+        self.epy_block_1 = epy_block_1.blk(frame_len=frame_len, verbose=True)
+        self.epy_block_0_0_0 = epy_block_0_0_0.TestPatternSource_PDU(payload_len=payload_len_int, interval_ms=100)
+        self.epy_block_0 = epy_block_0.blk()
         self.digital_scrambler_bb_0 = digital.scrambler_bb(0x9A, 0xFF, 7)
         self.digital_pfb_clock_sync_xxx_0_0 = digital.pfb_clock_sync_ccf(sps, excess_bw, rrc_taps, nfilts, 0, 1.5, 1)
         self.digital_map_bb_0_0_0_0 = digital.map_bb([-1,1])
         self.digital_descrambler_bb_0 = digital.descrambler_bb(0x9A, 0xFF, 7)
         self.digital_costas_loop_cc_0_0 = digital.costas_loop_cc(0.2, 4, True)
+        self.digital_correlate_access_code_tag_xx_0 = digital.correlate_access_code_tag_bb('0o00011010110011111111110000011101', 2, 'CCSDS_frame')
         self.digital_constellation_modulator_0_0 = digital.generic_mod(
             constellation=bpsk,
             differential=False,
@@ -369,12 +387,14 @@ class BPSK_Mod_Demod(gr.top_block, Qt.QWidget):
             taps=[1.0],
             noise_seed=0,
             block_tags=False)
-        self.blocks_vector_source_x_0_1_0_0 = blocks.vector_source_b((frame_size//15)*[0, 0, 1, 0, 3, 0, 7, 0, 15, 0, 31, 0, 63, 0, 127], True, 1, [])
         self.blocks_unpack_k_bits_bb_2_1 = blocks.unpack_k_bits_bb(8)
         self.blocks_unpack_k_bits_bb_2_0 = blocks.unpack_k_bits_bb(8)
         self.blocks_throttle2_0 = blocks.throttle( gr.sizeof_gr_complex*1, samp_rate, True, 0 if "auto" == "auto" else max( int(float(0.1) * samp_rate) if "auto" == "time" else int(0.1), 1) )
+        self.blocks_tagged_stream_align_1 = blocks.tagged_stream_align(gr.sizeof_char*1, "frame_len")
         self.blocks_pack_k_bits_bb_1_0_0_0 = blocks.pack_k_bits_bb(8)
         self.blocks_pack_k_bits_bb_1_0 = blocks.pack_k_bits_bb(8)
+        self.blocks_message_debug_0_1_0_0 = blocks.message_debug(True, gr.log_levels.info)
+        self.blocks_message_debug_0_1_0_0.set_block_alias("Output")
         self.blocks_delay_3 = blocks.delay(gr.sizeof_gr_complex*1, 3)
         self.blocks_delay_2 = blocks.delay(gr.sizeof_char*1, delay_constellation)
         self.blocks_delay_1_0 = blocks.delay(gr.sizeof_char*1, delay_byte)
@@ -391,6 +411,13 @@ class BPSK_Mod_Demod(gr.top_block, Qt.QWidget):
         ##################################################
         # Connections
         ##################################################
+        self.msg_connect((self.epy_block_0, 'out'), (self.pdu_pdu_to_tagged_stream_0_0_0, 'pdus'))
+        self.msg_connect((self.epy_block_0_0_0, 'out'), (self.satellites_encode_rs_ccsds_0, 'in'))
+        self.msg_connect((self.epy_block_2, 'out'), (self.satellites_decode_rs_ccsds_0, 'in'))
+        self.msg_connect((self.epy_block_3, 'out'), (self.epy_block_2, 'in'))
+        self.msg_connect((self.pdu_tagged_stream_to_pdu_0_0_0_0, 'pdus'), (self.epy_block_3, 'in'))
+        self.msg_connect((self.satellites_decode_rs_ccsds_0, 'out'), (self.blocks_message_debug_0_1_0_0, 'print'))
+        self.msg_connect((self.satellites_encode_rs_ccsds_0, 'out'), (self.epy_block_0, 'in'))
         self.connect((self.blocks_char_to_float_0_1_0, 0), (self.qtgui_time_sink_x_0_0_0, 0))
         self.connect((self.blocks_char_to_float_0_1_0_0_0, 0), (self.qtgui_time_sink_x_0_0_0, 1))
         self.connect((self.blocks_char_to_float_0_1_0_0_1_0_1, 0), (self.qtgui_time_sink_x_1_0, 1))
@@ -404,27 +431,31 @@ class BPSK_Mod_Demod(gr.top_block, Qt.QWidget):
         self.connect((self.blocks_delay_3, 0), (self.digital_constellation_decoder_cb_0, 0))
         self.connect((self.blocks_pack_k_bits_bb_1_0, 0), (self.digital_constellation_modulator_0_0, 0))
         self.connect((self.blocks_pack_k_bits_bb_1_0_0_0, 0), (self.blocks_char_to_float_0_1_0_1_0, 0))
+        self.connect((self.blocks_tagged_stream_align_1, 0), (self.pdu_tagged_stream_to_pdu_0_0_0_0, 0))
         self.connect((self.blocks_throttle2_0, 0), (self.channels_channel_model_0, 0))
         self.connect((self.blocks_unpack_k_bits_bb_2_0, 0), (self.blocks_delay_1, 0))
         self.connect((self.blocks_unpack_k_bits_bb_2_1, 0), (self.digital_scrambler_bb_0, 0))
-        self.connect((self.blocks_vector_source_x_0_1_0_0, 0), (self.blocks_delay_1_0, 0))
-        self.connect((self.blocks_vector_source_x_0_1_0_0, 0), (self.blocks_unpack_k_bits_bb_2_0, 0))
-        self.connect((self.blocks_vector_source_x_0_1_0_0, 0), (self.blocks_unpack_k_bits_bb_2_1, 0))
         self.connect((self.channels_channel_model_0, 0), (self.digital_pfb_clock_sync_xxx_0_0, 0))
         self.connect((self.digital_constellation_decoder_cb_0, 0), (self.blocks_char_to_float_0_1_0_0_1_0_1, 0))
         self.connect((self.digital_constellation_decoder_cb_0, 0), (self.digital_map_bb_0_0_0_0, 0))
         self.connect((self.digital_constellation_modulator_0_0, 0), (self.blocks_throttle2_0, 0))
+        self.connect((self.digital_correlate_access_code_tag_xx_0, 0), (self.epy_block_1, 0))
         self.connect((self.digital_costas_loop_cc_0_0, 0), (self.blocks_delay_3, 0))
         self.connect((self.digital_costas_loop_cc_0_0, 0), (self.qtgui_const_sink_x_0_0_0, 0))
         self.connect((self.digital_descrambler_bb_0, 0), (self.blocks_char_to_float_0_1_0_0_0, 0))
         self.connect((self.digital_descrambler_bb_0, 0), (self.blocks_pack_k_bits_bb_1_0_0_0, 0))
+        self.connect((self.digital_descrambler_bb_0, 0), (self.digital_correlate_access_code_tag_xx_0, 0))
         self.connect((self.digital_map_bb_0_0_0_0, 0), (self.blocks_char_to_float_0_2_0, 0))
         self.connect((self.digital_pfb_clock_sync_xxx_0_0, 0), (self.digital_costas_loop_cc_0_0, 0))
         self.connect((self.digital_pfb_clock_sync_xxx_0_0, 0), (self.qtgui_const_sink_x_0_0_0_0, 0))
         self.connect((self.digital_scrambler_bb_0, 0), (self.fec_extended_encoder_1_0_0, 0))
+        self.connect((self.epy_block_1, 0), (self.blocks_tagged_stream_align_1, 0))
         self.connect((self.fec_extended_decoder_0_1_0, 0), (self.digital_descrambler_bb_0, 0))
         self.connect((self.fec_extended_encoder_1_0_0, 0), (self.blocks_delay_2, 0))
         self.connect((self.fec_extended_encoder_1_0_0, 0), (self.blocks_pack_k_bits_bb_1_0, 0))
+        self.connect((self.pdu_pdu_to_tagged_stream_0_0_0, 0), (self.blocks_delay_1_0, 0))
+        self.connect((self.pdu_pdu_to_tagged_stream_0_0_0, 0), (self.blocks_unpack_k_bits_bb_2_0, 0))
+        self.connect((self.pdu_pdu_to_tagged_stream_0_0_0, 0), (self.blocks_unpack_k_bits_bb_2_1, 0))
 
 
     def closeEvent(self, event):
@@ -440,7 +471,6 @@ class BPSK_Mod_Demod(gr.top_block, Qt.QWidget):
 
     def set_frame_size(self, frame_size):
         self.frame_size = frame_size
-        self.blocks_vector_source_x_0_1_0_0.set_data((self.frame_size//15)*[0, 0, 1, 0, 3, 0, 7, 0, 15, 0, 31, 0, 63, 0, 127], [])
 
     def get_puncpat(self):
         return self.puncpat
@@ -454,6 +484,7 @@ class BPSK_Mod_Demod(gr.top_block, Qt.QWidget):
     def set_payload_len_int(self, payload_len_int):
         self.payload_len_int = payload_len_int
         self.set_payload_coded_len(self.payload_len_int + 32)
+        self.epy_block_0_0_0.payload_len = self.payload_len_int
 
     def get_payload_coded_len(self):
         return self.payload_coded_len
@@ -598,6 +629,7 @@ class BPSK_Mod_Demod(gr.top_block, Qt.QWidget):
 
     def set_frame_len(self, frame_len):
         self.frame_len = frame_len
+        self.epy_block_1.frame_len = self.frame_len
 
     def get_format_key(self):
         return self.format_key

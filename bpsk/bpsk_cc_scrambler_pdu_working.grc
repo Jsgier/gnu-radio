@@ -486,7 +486,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1952, 1208.0]
+    coordinate: [1944, 1192.0]
     rotation: 0
     state: enabled
 - name: blocks_char_to_float_0_1_0_0_0
@@ -503,7 +503,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1952, 1328.0]
+    coordinate: [1944, 1312.0]
     rotation: 0
     state: enabled
 - name: blocks_char_to_float_0_1_0_0_1_0_1
@@ -520,7 +520,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1960, 872.0]
+    coordinate: [1952, 856.0]
     rotation: 0
     state: enabled
 - name: blocks_char_to_float_0_1_0_0_1_0_1_0
@@ -537,7 +537,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1960, 792.0]
+    coordinate: [1952, 776.0]
     rotation: 0
     state: enabled
 - name: blocks_char_to_float_0_1_0_1
@@ -554,7 +554,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1944, 992.0]
+    coordinate: [1936, 976.0]
     rotation: 0
     state: enabled
 - name: blocks_char_to_float_0_1_0_1_0
@@ -571,7 +571,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1944, 1088.0]
+    coordinate: [1936, 1072.0]
     rotation: 0
     state: enabled
 - name: blocks_char_to_float_0_2_0
@@ -588,7 +588,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [448, 1512.0]
+    coordinate: [440, 1688.0]
     rotation: 0
     state: enabled
 - name: blocks_delay_1
@@ -608,7 +608,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1672, 1208.0]
+    coordinate: [1664, 1192.0]
     rotation: 0
     state: enabled
 - name: blocks_delay_1_0
@@ -628,7 +628,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1664, 992.0]
+    coordinate: [1656, 976.0]
     rotation: 0
     state: enabled
 - name: blocks_delay_2
@@ -648,7 +648,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1808, 792.0]
+    coordinate: [1800, 776.0]
     rotation: 0
     state: enabled
 - name: blocks_delay_3
@@ -668,9 +668,39 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [800, 1280.0]
+    coordinate: [792, 1456.0]
     rotation: 0
     state: enabled
+- name: blocks_message_debug_0_1_0_0
+  id: blocks_message_debug
+  parameters:
+    affinity: ''
+    alias: Output
+    comment: ''
+    en_uvec: 'True'
+    log_level: info
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [2128, 1816.0]
+    rotation: 0
+    state: enabled
+- name: blocks_message_debug_0_1_0_0_0
+  id: blocks_message_debug
+  parameters:
+    affinity: ''
+    alias: Input
+    comment: ''
+    en_uvec: 'True'
+    log_level: info
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [808, 624.0]
+    rotation: 0
+    state: disabled
 - name: blocks_pack_k_bits_bb_1_0
   id: blocks_pack_k_bits_bb
   parameters:
@@ -684,7 +714,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [256, 952.0]
+    coordinate: [248, 1128.0]
     rotation: 0
     state: enabled
 - name: blocks_pack_k_bits_bb_1_0_0_0
@@ -700,7 +730,25 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1792, 1088.0]
+    coordinate: [1784, 1072.0]
+    rotation: 0
+    state: enabled
+- name: blocks_tagged_stream_align_1
+  id: blocks_tagged_stream_align
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    lengthtagname: '"frame_len"'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: byte
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [776, 1840.0]
     rotation: 0
     state: enabled
 - name: blocks_throttle2_0
@@ -721,7 +769,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [656, 944.0]
+    coordinate: [648, 1120.0]
     rotation: 0
     state: enabled
 - name: blocks_unpack_k_bits_bb_2_0
@@ -737,7 +785,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1504, 1208.0]
+    coordinate: [1496, 1192.0]
     rotation: 0
     state: enabled
 - name: blocks_unpack_k_bits_bb_2_1
@@ -753,27 +801,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [328, 792.0]
-    rotation: 0
-    state: enabled
-- name: blocks_vector_source_x_0_1_0_0
-  id: blocks_vector_source_x
-  parameters:
-    affinity: ''
-    alias: ''
-    comment: ''
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    repeat: 'True'
-    tags: '[]'
-    type: byte
-    vector: (frame_size//15)*[0, 0, 1, 0, 3, 0, 7, 0, 15, 0, 31, 0, 63, 0, 127]
-    vlen: '1'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [64, 776.0]
+    coordinate: [320, 968.0]
     rotation: 0
     state: enabled
 - name: channels_channel_model_0
@@ -794,7 +822,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [856, 912.0]
+    coordinate: [848, 1088.0]
     rotation: 0
     state: enabled
 - name: digital_constellation_decoder_cb_0
@@ -810,7 +838,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [912, 1280.0]
+    coordinate: [904, 1456.0]
     rotation: 0
     state: enabled
 - name: digital_constellation_modulator_0_0
@@ -832,7 +860,26 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [400, 928.0]
+    coordinate: [392, 1104.0]
+    rotation: 0
+    state: enabled
+- name: digital_correlate_access_code_tag_xx_0
+  id: digital_correlate_access_code_tag_xx
+  parameters:
+    access_code: 0o00011010110011111111110000011101
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    tagname: CCSDS_frame
+    threshold: '2'
+    type: byte
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [272, 1824.0]
     rotation: 0
     state: enabled
 - name: digital_costas_loop_cc_0_0
@@ -850,7 +897,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [552, 1232.0]
+    coordinate: [544, 1408.0]
     rotation: 0
     state: enabled
 - name: digital_descrambler_bb_0
@@ -870,7 +917,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [936, 1496.0]
+    coordinate: [928, 1672.0]
     rotation: 0
     state: enabled
 - name: digital_map_bb_0_0_0_0
@@ -886,7 +933,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [280, 1512.0]
+    coordinate: [272, 1688.0]
     rotation: 0
     state: enabled
 - name: digital_pfb_clock_sync_xxx_0_0
@@ -909,7 +956,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [264, 1224.0]
+    coordinate: [256, 1400.0]
     rotation: 0
     state: enabled
 - name: digital_scrambler_bb_0
@@ -929,7 +976,244 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [528, 776.0]
+    coordinate: [520, 952.0]
+    rotation: 0
+    state: enabled
+- name: epy_block_0
+  id: epy_block
+  parameters:
+    _source_code: "import pmt\nfrom gnuradio import gr\n\nclass blk(gr.basic_block):\n\
+      \    \"\"\"\n    PDU block that prepends the CCSDS ASM (0x1A CF FC 1D) to each\
+      \ PDU payload.\n    Input:  PDU (meta, u8vector)\n    Output: PDU (same meta,\
+      \ ASM + payload)\n    \"\"\"\n\n    def __init__(self):\n        gr.basic_block.__init__(\n\
+      \            self,\n            name=\"prepend_ccsds_asm_pdu\",\n          \
+      \  in_sig=None,\n            out_sig=None,\n        )\n\n        # CCSDS ASM:\
+      \ 0x1A CF FC 1D\n        self._asm = bytes([0x1A, 0xCF, 0xFC, 0x1D])\n\n   \
+      \     # Register PDU ports\n        self.message_port_register_in(pmt.intern(\"\
+      in\"))\n        self.set_msg_handler(pmt.intern(\"in\"), self.handle_msg)\n\n\
+      \        self.message_port_register_out(pmt.intern(\"out\"))\n\n    def handle_msg(self,\
+      \ msg):\n        \"\"\"\n        msg is a PDU: (meta, data)\n        meta: PMT\
+      \ dictionary (or PMT_NIL)\n        data: PMT u8vector\n        \"\"\"\n    \
+      \    # Split into metadata and data\n        meta = pmt.car(msg)\n        data\
+      \ = pmt.cdr(msg)\n\n        if not pmt.is_u8vector(data):\n            # Not\
+      \ what we expect; ignore\n            return\n\n        # Convert u8vector to\
+      \ Python bytes\n        in_bytes = bytes(bytearray(pmt.u8vector_elements(data)))\n\
+      \n        # Prepend ASM\n        out_bytes = self._asm + in_bytes\n\n      \
+      \  # Convert back to u8vector\n        out_vec = pmt.init_u8vector(len(out_bytes),\
+      \ list(out_bytes))\n\n        # Preserve metadata (you could also modify meta\
+      \ here if needed)\n        out_pdu = pmt.cons(meta, out_vec)\n\n        # Publish\
+      \ on output port\n        self.message_port_pub(pmt.intern(\"out\"), out_pdu)\n"
+    affinity: ''
+    alias: ''
+    comment: Confirmed that ASM being appended.
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    _io_cache: '(''prepend_ccsds_asm_pdu'', ''blk'', [], [(''in'', ''message'', 1)],
+      [(''out'', ''message'', 1)], ''\n    PDU block that prepends the CCSDS ASM (0x1A
+      CF FC 1D) to each PDU payload.\n    Input:  PDU (meta, u8vector)\n    Output:
+      PDU (same meta, ASM + payload)\n    '', [])'
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [544, 784.0]
+    rotation: 0
+    state: enabled
+- name: epy_block_0_0_0
+  id: epy_block
+  parameters:
+    _source_code: "import pmt\nfrom gnuradio import gr\nimport time\nimport threading\n\
+      \nclass TestPatternSource_PDU(gr.basic_block):\n    \"\"\"\n    Periodically\
+      \ emits PDUs with a simple test pattern:\n    [seq_hi][seq_lo][payload bytes...]\n\
+      \n    - seq: 16-bit counter\n    - payload filled with pattern (e.g. incrementing\
+      \ or 0xAA/0x55)\n    \"\"\"\n\n    def __init__(self, payload_len=200, interval_ms=100):\n\
+      \        gr.basic_block.__init__(self,\n            name=\"TestPatternSource_PDU\"\
+      ,\n            in_sig=None,\n            out_sig=None)\n\n        self.payload_len\
+      \ = int(payload_len)\n        self.interval = float(interval_ms) / 1000.0\n\
+      \        self.seq = 0\n\n        self.message_port_register_out(pmt.intern('out'))\n\
+      \n        # start worker thread\n        self._stop = False\n        self.thread\
+      \ = threading.Thread(target=self._worker)\n        self.thread.daemon = True\n\
+      \        self.thread.start()\n\n    def stop(self):\n        self._stop = True\n\
+      \        try:\n            self.thread.join(timeout=0.1)\n        except:\n\
+      \            pass\n        return super().stop()\n\n    def _make_payload(self):\n\
+      \        # 2-byte sequence number + payload_len-2 bytes of pattern\n       \
+      \ payload = bytearray(self.payload_len)\n        seq = self.seq & 0xFFFF\n \
+      \       payload[0] = (seq >> 8) & 0xFF\n        payload[1] = seq & 0xFF\n\n\
+      \        # simple pattern: incrementing bytes\n        ## simpler pattern enabled:\
+      \ same byte every time. \n        for i in range(1, self.payload_len):\n   \
+      \         payload[i] = (i + seq) & 0xFF\n            #payload[i] = (i) & 0xFF\n\
+      \n        #self.seq = (self.seq + 1) & 0xFFFF\n        self.seq = (self.seq)\
+      \ & 0xFFFF\n        return payload\n\n    def _worker(self):\n        while\
+      \ not self._stop:\n            payload = self._make_payload()\n            meta\
+      \ = pmt.make_dict()  # empty metadata\n\n            vec = pmt.init_u8vector(len(payload),\
+      \ payload)\n            pdu = pmt.cons(meta, vec)\n\n            self.message_port_pub(pmt.intern('out'),\
+      \ pdu)\n            time.sleep(self.interval)\n"
+    affinity: ''
+    alias: ''
+    comment: ''
+    interval_ms: '100'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    payload_len: payload_len_int
+  states:
+    _io_cache: '(''TestPatternSource_PDU'', ''TestPatternSource_PDU'', [(''payload_len'',
+      ''200''), (''interval_ms'', ''100'')], [], [(''out'', ''message'', 1)], ''\n    Periodically
+      emits PDUs with a simple test pattern:\n    [seq_hi][seq_lo][payload bytes...]\n\n    -
+      seq: 16-bit counter\n    - payload filled with pattern (e.g. incrementing or
+      0xAA/0x55)\n    '', [''payload_len''])'
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [56, 768.0]
+    rotation: 0
+    state: enabled
+- name: epy_block_1
+  id: epy_block
+  parameters:
+    _source_code: "import numpy\nimport pmt\nfrom gnuradio import gr\n\nclass blk(gr.sync_block):\n\
+      \    \"\"\"\n    Stream block that watches for 'CCSDS_frame' tags and injects\
+      \ a\n    'frame_len' tag with value frame_len at the **same** offset.\n\n  \
+      \  Assumes:\n      - Input and output are uint8 bits (0/1), 1 bit per item.\n\
+      \      - frame_len is in items (bits).\n    \"\"\"\n\n    def __init__(self,\
+      \ frame_len=2072, verbose=False):\n        gr.sync_block.__init__(\n       \
+      \     self,\n            name=\"frame_len_from_ccsds_tag\",\n            in_sig=[numpy.uint8],\n\
+      \            out_sig=[numpy.uint8],\n        )\n\n        self.key_ccsds_frame\
+      \ = pmt.intern(\"CCSDS_frame\")\n        self.key_frame_len   = pmt.intern(\"\
+      frame_len\")\n\n        self.frame_len       = int(frame_len)\n        self.frame_len_value\
+      \ = pmt.from_long(self.frame_len)\n\n        self.verbose = bool(verbose)\n\n\
+      \    def work(self, input_items, output_items):\n        inp = input_items[0]\n\
+      \        out = output_items[0]\n\n        # Pass-through\n        out[:] = inp\n\
+      \n        nread    = self.nitems_read(0)\n        nwritten = self.nitems_written(0)\n\
+      \        nitems   = len(inp)\n\n        # Get tags in this input window\n  \
+      \      tags = self.get_tags_in_window(0, 0, nitems)\n\n        for t in tags:\n\
+      \            if t.key == self.key_ccsds_frame:\n                # Absolute offset\
+      \ where CCSDS_frame tag occurred\n                abs_in_offset = t.offset\n\
+      \n                # Relative index within this work() buffer\n             \
+      \   rel_index = abs_in_offset - nread\n\n                if 0 <= rel_index <\
+      \ nitems:\n                    abs_out_offset = nwritten + rel_index\n\n   \
+      \                 # Add frame_len tag at the **same** logical offset\n     \
+      \               self.add_item_tag(\n                        0,\n           \
+      \             abs_out_offset,\n                        self.key_frame_len,\n\
+      \                        self.frame_len_value,\n                        t.srcid\n\
+      \                    )\n\n                    if self.verbose:\n           \
+      \             print(\n                            \"[frame_len_from_ccsds_tag]\
+      \ CCSDS_frame at {}, \"\n                            \"frame_len tag at {},\
+      \ len={}\".format(\n                                int(abs_in_offset), int(abs_out_offset),\
+      \ self.frame_len\n                            )\n                        )\n\
+      \n        return nitems\n"
+    affinity: ''
+    alias: ''
+    comment: ''
+    frame_len: frame_len
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    verbose: 'True'
+  states:
+    _io_cache: ('frame_len_from_ccsds_tag', 'blk', [('frame_len', '2072'), ('verbose',
+      'False')], [('0', 'byte', 1)], [('0', 'byte', 1)], "\n    Stream block that
+      watches for 'CCSDS_frame' tags and injects a\n    'frame_len' tag with value
+      frame_len at the **same** offset.\n\n    Assumes:\n      - Input and output
+      are uint8 bits (0/1), 1 bit per item.\n      - frame_len is in items (bits).\n    ",
+      ['frame_len', 'verbose'])
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [520, 1832.0]
+    rotation: 0
+    state: enabled
+- name: epy_block_2
+  id: epy_block
+  parameters:
+    _source_code: "import pmt\nfrom gnuradio import gr\n\nclass blk(gr.basic_block):\n\
+      \    \"\"\"\n    PDU block that strips the CCSDS ASM (0x1A CF FC 1D) from the\
+      \ END of each PDU.\n\n    Input:  PDU (meta, u8vector) = [payload ... ASM]\n\
+      \    Output: PDU (meta, u8vector) = [payload ...]\n\n    If ASM is not found\
+      \ at the end, the PDU is dropped.\n    \"\"\"\n\n    def __init__(self, verbose=False):\n\
+      \        gr.basic_block.__init__(\n            self,\n            name=\"strip_ccsds_asm_pdu_end\"\
+      ,\n            in_sig=None,\n            out_sig=None,\n        )\n\n      \
+      \  self._asm = bytes([0x1A, 0xCF, 0xFC, 0x1D])\n        self.verbose = verbose\n\
+      \n        # Register ports\n        self.message_port_register_in(pmt.intern(\"\
+      in\"))\n        self.set_msg_handler(pmt.intern(\"in\"), self.handle_msg)\n\n\
+      \        self.message_port_register_out(pmt.intern(\"out\"))\n\n    def handle_msg(self,\
+      \ msg):\n        meta = pmt.car(msg)\n        data = pmt.cdr(msg)\n\n      \
+      \  if not pmt.is_u8vector(data):\n            if self.verbose:\n           \
+      \     print(\"[strip_ccsds_asm_pdu_end] Non-u8vector PDU, dropping.\")\n   \
+      \         return\n\n        in_bytes = bytes(bytearray(pmt.u8vector_elements(data)))\n\
+      \        length = len(in_bytes)\n\n        if length < 4:\n            if self.verbose:\n\
+      \                print(f\"[strip_ccsds_asm_pdu_end] PDU too short (len={length}),\
+      \ dropping.\")\n            return\n\n        # Extract last 4 bytes (expected\
+      \ location of ASM)\n        asm_bytes = in_bytes[-4:]\n\n        if asm_bytes\
+      \ != self._asm:\n            if self.verbose:\n                print(\n    \
+      \                \"[strip_ccsds_asm_pdu_end] ASM mismatch, dropping. \"\n  \
+      \                  f\"Got {asm_bytes.hex()}, expected {self._asm.hex()}\"\n\
+      \                )\n            return\n\n        if self.verbose:\n       \
+      \     print(\n                \"[strip_ccsds_asm_pdu_end] ASM match at END.\
+      \ \"\n                f\"Found {asm_bytes.hex()}\"\n            )\n\n      \
+      \  # Everything except the last 4 bytes (the ASM)\n        out_bytes = in_bytes[:-4]\n\
+      \n        # Convert back to u8vector\n        out_vec = pmt.init_u8vector(len(out_bytes),\
+      \ list(out_bytes))\n        out_pdu = pmt.cons(meta, out_vec)\n\n        # Publish\n\
+      \        self.message_port_pub(pmt.intern(\"out\"), out_pdu)"
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    verbose: 'True'
+  states:
+    _io_cache: '(''strip_ccsds_asm_pdu_end'', ''blk'', [(''verbose'', ''False'')],
+      [(''in'', ''message'', 1)], [(''out'', ''message'', 1)], ''\n    PDU block that
+      strips the CCSDS ASM (0x1A CF FC 1D) from the END of each PDU.\n\n    Input:  PDU
+      (meta, u8vector) = [payload ... ASM]\n    Output: PDU (meta, u8vector) = [payload
+      ...]\n\n    If ASM is not found at the end, the PDU is dropped.\n    '', [''verbose''])'
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1568, 1840.0]
+    rotation: 0
+    state: enabled
+- name: epy_block_3
+  id: epy_block
+  parameters:
+    _source_code: "import pmt\nfrom gnuradio import gr\n\nclass blk(gr.basic_block):\n\
+      \    \"\"\"\n    PDU block that takes a u8vector of bits (0/1 per element)\n\
+      \    and packs them into bytes (MSB-first).\n\n    Input:  PDU (meta, u8vector)\
+      \ length = 2072 bits\n    Output: PDU (meta, u8vector) length = 259 bytes (2072\
+      \ / 8)\n    \"\"\"\n\n    def __init__(self, verbose=False):\n        gr.basic_block.__init__(\n\
+      \            self,\n            name=\"bits_to_bytes_pdu\",\n            in_sig=None,\n\
+      \            out_sig=None,\n        )\n\n        self.verbose = verbose\n\n\
+      \        self.message_port_register_in(pmt.intern(\"in\"))\n        self.set_msg_handler(pmt.intern(\"\
+      in\"), self.handle_msg)\n\n        self.message_port_register_out(pmt.intern(\"\
+      out\"))\n\n    def handle_msg(self, msg):\n        meta = pmt.car(msg)\n   \
+      \     data = pmt.cdr(msg)\n\n        if not pmt.is_u8vector(data):\n       \
+      \     if self.verbose:\n                print(\"[bits_to_bytes_pdu] Non-u8vector\
+      \ PDU, dropping.\")\n            return\n\n        bits = list(pmt.u8vector_elements(data))\n\
+      \        n_bits = len(bits)\n\n        if n_bits % 8 != 0:\n            if self.verbose:\n\
+      \                print(f\"[bits_to_bytes_pdu] Bit length {n_bits} not multiple\
+      \ of 8, dropping.\")\n            return\n\n        n_bytes = n_bits // 8\n\
+      \        out_bytes = []\n\n        # Pack 8 bits (b0..b7) into one byte: b0\
+      \ = MSB\n        idx = 0\n        for _ in range(n_bytes):\n            byte_val\
+      \ = 0\n            for b in range(8):\n                bit = bits[idx]\n   \
+      \             # Ensure bit is 0/1\n                bit = 1 if bit != 0 else\
+      \ 0\n                byte_val = (byte_val << 1) | bit\n                idx +=\
+      \ 1\n            out_bytes.append(byte_val)\n\n        out_vec = pmt.init_u8vector(len(out_bytes),\
+      \ out_bytes)\n        out_pdu = pmt.cons(meta, out_vec)\n        self.message_port_pub(pmt.intern(\"\
+      out\"), out_pdu)"
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    verbose: 'True'
+  states:
+    _io_cache: '(''bits_to_bytes_pdu'', ''blk'', [(''verbose'', ''False'')], [(''in'',
+      ''message'', 1)], [(''out'', ''message'', 1)], ''\n    PDU block that takes
+      a u8vector of bits (0/1 per element)\n    and packs them into bytes (MSB-first).\n\n    Input:  PDU
+      (meta, u8vector) length = 2072 bits\n    Output: PDU (meta, u8vector) length
+      = 259 bytes (2072 / 8)\n    '', [''verbose''])'
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1312, 1840.0]
     rotation: 0
     state: enabled
 - name: fec_extended_decoder_0_1_0
@@ -949,7 +1233,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [632, 1488.0]
+    coordinate: [624, 1664.0]
     rotation: 0
     state: enabled
 - name: fec_extended_encoder_1_0_0
@@ -967,7 +1251,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [688, 776.0]
+    coordinate: [680, 952.0]
     rotation: 0
     state: enabled
 - name: frame_size
@@ -985,6 +1269,40 @@ blocks:
     bus_source: false
     bus_structure: null
     coordinate: [1128, 328.0]
+    rotation: 0
+    state: enabled
+- name: pdu_pdu_to_tagged_stream_0_0_0
+  id: pdu_pdu_to_tagged_stream
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: Tagged Stream in Bytes
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    tag: '"stream_tag"'
+    type: byte
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [808, 776.0]
+    rotation: 0
+    state: enabled
+- name: pdu_tagged_stream_to_pdu_0_0_0_0
+  id: pdu_tagged_stream_to_pdu
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    tag: '"frame_len"'
+    type: byte
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1032, 1840.0]
     rotation: 0
     state: enabled
 - name: puncpat
@@ -1093,7 +1411,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [768, 1128.0]
+    coordinate: [760, 1304.0]
     rotation: 0
     state: enabled
 - name: qtgui_const_sink_x_0_0_0_0
@@ -1185,7 +1503,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [504, 1128.0]
+    coordinate: [496, 1304.0]
     rotation: 0
     state: enabled
 - name: qtgui_time_sink_x_0_0_0
@@ -1282,7 +1600,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [2144, 1248.0]
+    coordinate: [2136, 1232.0]
     rotation: 0
     state: enabled
 - name: qtgui_time_sink_x_0_0_0_0
@@ -1379,7 +1697,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [2152, 1008.0]
+    coordinate: [2144, 992.0]
     rotation: 0
     state: enabled
 - name: qtgui_time_sink_x_1_0
@@ -1476,7 +1794,41 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [2152, 808.0]
+    coordinate: [2144, 792.0]
+    rotation: 0
+    state: enabled
+- name: satellites_decode_rs_ccsds_0
+  id: satellites_decode_rs_ccsds
+  parameters:
+    affinity: ''
+    alias: ''
+    basis: 'False'
+    comment: ''
+    interleave: '1'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1824, 1832.0]
+    rotation: 0
+    state: enabled
+- name: satellites_encode_rs_ccsds_0
+  id: satellites_encode_rs_ccsds
+  parameters:
+    affinity: ''
+    alias: ''
+    basis: 'False'
+    comment: ''
+    interleave: '1'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [296, 768.0]
     rotation: 0
     state: enabled
 - name: virtual_sink_0
@@ -1489,7 +1841,20 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1008, 792.0]
+    coordinate: [1000, 968.0]
+    rotation: 0
+    state: enabled
+- name: virtual_sink_0_0
+  id: virtual_sink
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: message_in
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1016, 776.0]
     rotation: 0
     state: enabled
 - name: virtual_sink_1_0_0
@@ -1502,7 +1867,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [528, 680.0]
+    coordinate: [520, 856.0]
     rotation: 0
     state: enabled
 - name: virtual_sink_2
@@ -1515,7 +1880,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1152, 1280.0]
+    coordinate: [1144, 1456.0]
     rotation: 0
     state: enabled
 - name: virtual_sink_2_0
@@ -1528,7 +1893,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1144, 1512.0]
+    coordinate: [1136, 1688.0]
     rotation: 0
     state: enabled
 - name: virtual_sink_3
@@ -1541,7 +1906,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1152, 952.0]
+    coordinate: [1144, 1128.0]
     rotation: 0
     state: enabled
 - name: virtual_source_0
@@ -1554,7 +1919,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [72, 1512.0]
+    coordinate: [64, 1688.0]
     rotation: 0
     state: enabled
 - name: virtual_source_0_0
@@ -1567,7 +1932,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1312, 872.0]
+    coordinate: [1304, 856.0]
     rotation: 0
     state: enabled
 - name: virtual_source_0_1
@@ -1580,7 +1945,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1576, 1088.0]
+    coordinate: [1568, 1072.0]
     rotation: 0
     state: enabled
 - name: virtual_source_1
@@ -1593,7 +1958,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [72, 1272.0]
+    coordinate: [64, 1448.0]
     rotation: 0
     state: enabled
 - name: virtual_source_1_1_0
@@ -1606,7 +1971,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1320, 992.0]
+    coordinate: [1312, 976.0]
     rotation: 0
     state: enabled
 - name: virtual_source_2
@@ -1619,7 +1984,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [72, 952.0]
+    coordinate: [64, 1128.0]
     rotation: 0
     state: enabled
 - name: virtual_source_2_0
@@ -1632,7 +1997,33 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1312, 792.0]
+    coordinate: [1304, 776.0]
+    rotation: 0
+    state: enabled
+- name: virtual_source_2_0_0
+  id: virtual_source
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: message_in
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [56, 968.0]
+    rotation: 0
+    state: enabled
+- name: virtual_source_2_0_0_0
+  id: virtual_source
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: decoder_out
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [64, 1840.0]
     rotation: 0
     state: enabled
 
@@ -1650,14 +2041,14 @@ connections:
 - [blocks_delay_3, '0', digital_constellation_decoder_cb_0, '0']
 - [blocks_pack_k_bits_bb_1_0, '0', digital_constellation_modulator_0_0, '0']
 - [blocks_pack_k_bits_bb_1_0_0_0, '0', blocks_char_to_float_0_1_0_1_0, '0']
+- [blocks_tagged_stream_align_1, '0', pdu_tagged_stream_to_pdu_0_0_0_0, '0']
 - [blocks_throttle2_0, '0', channels_channel_model_0, '0']
 - [blocks_unpack_k_bits_bb_2_0, '0', blocks_delay_1, '0']
 - [blocks_unpack_k_bits_bb_2_1, '0', digital_scrambler_bb_0, '0']
-- [blocks_vector_source_x_0_1_0_0, '0', blocks_unpack_k_bits_bb_2_1, '0']
-- [blocks_vector_source_x_0_1_0_0, '0', virtual_sink_1_0_0, '0']
 - [channels_channel_model_0, '0', virtual_sink_3, '0']
 - [digital_constellation_decoder_cb_0, '0', virtual_sink_2, '0']
 - [digital_constellation_modulator_0_0, '0', blocks_throttle2_0, '0']
+- [digital_correlate_access_code_tag_xx_0, '0', epy_block_1, '0']
 - [digital_costas_loop_cc_0_0, '0', blocks_delay_3, '0']
 - [digital_costas_loop_cc_0_0, '0', qtgui_const_sink_x_0_0_0, '0']
 - [digital_descrambler_bb_0, '0', virtual_sink_2_0, '0']
@@ -1665,8 +2056,18 @@ connections:
 - [digital_pfb_clock_sync_xxx_0_0, '0', digital_costas_loop_cc_0_0, '0']
 - [digital_pfb_clock_sync_xxx_0_0, '0', qtgui_const_sink_x_0_0_0_0, '0']
 - [digital_scrambler_bb_0, '0', fec_extended_encoder_1_0_0, '0']
+- [epy_block_0, out, blocks_message_debug_0_1_0_0_0, print]
+- [epy_block_0, out, pdu_pdu_to_tagged_stream_0_0_0, pdus]
+- [epy_block_0_0_0, out, satellites_encode_rs_ccsds_0, in]
+- [epy_block_1, '0', blocks_tagged_stream_align_1, '0']
+- [epy_block_2, out, satellites_decode_rs_ccsds_0, in]
+- [epy_block_3, out, epy_block_2, in]
 - [fec_extended_decoder_0_1_0, '0', digital_descrambler_bb_0, '0']
 - [fec_extended_encoder_1_0_0, '0', virtual_sink_0, '0']
+- [pdu_pdu_to_tagged_stream_0_0_0, '0', virtual_sink_0_0, '0']
+- [pdu_tagged_stream_to_pdu_0_0_0_0, pdus, epy_block_3, in]
+- [satellites_decode_rs_ccsds_0, out, blocks_message_debug_0_1_0_0, print]
+- [satellites_encode_rs_ccsds_0, out, epy_block_0, in]
 - [virtual_source_0, '0', digital_map_bb_0_0_0_0, '0']
 - [virtual_source_0_0, '0', blocks_char_to_float_0_1_0_0_1_0_1, '0']
 - [virtual_source_0_1, '0', blocks_char_to_float_0_1_0_0_0, '0']
@@ -1676,6 +2077,9 @@ connections:
 - [virtual_source_1_1_0, '0', blocks_unpack_k_bits_bb_2_0, '0']
 - [virtual_source_2, '0', blocks_pack_k_bits_bb_1_0, '0']
 - [virtual_source_2_0, '0', blocks_delay_2, '0']
+- [virtual_source_2_0_0, '0', blocks_unpack_k_bits_bb_2_1, '0']
+- [virtual_source_2_0_0, '0', virtual_sink_1_0_0, '0']
+- [virtual_source_2_0_0_0, '0', digital_correlate_access_code_tag_xx_0, '0']
 
 metadata:
   file_format: 1
